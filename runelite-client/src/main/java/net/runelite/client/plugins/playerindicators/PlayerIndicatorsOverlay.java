@@ -66,20 +66,26 @@ public class PlayerIndicatorsOverlay extends Overlay
 
 	private void renderPlayerOverlay(Graphics2D graphics, Player actor, Color color)
 	{
-		if (!config.drawOverheadPlayerNames())
+		if (!config.drawOverheadPlayerNames() && !config.drawOverheadPlayerLevels())
 		{
 			return;
 		}
 
-		String name = actor.getName().replace('\u00A0', ' ');
+		String text = "";
+		if (config.drawOverheadPlayerLevels())
+			text += "(" + Integer.toString(actor.getCombatLevel()) + ") ";
+
+		if (config.drawOverheadPlayerNames())
+			text += actor.getName().replace('\u00A0', ' ');
+
 		int offset = actor.getLogicalHeight() + 40;
-		Point textLocation = actor.getCanvasTextLocation(graphics, name, offset);
+		Point textLocation = actor.getCanvasTextLocation(graphics, text, offset);
 
 		if (textLocation != null)
 		{
 			if (config.showClanRanks() && actor.isClanMember())
 			{
-				ClanMemberRank rank = clanManager.getRank(name);
+				ClanMemberRank rank = clanManager.getRank(text);
 
 				if (rank != ClanMemberRank.UNRANKED)
 				{
@@ -98,7 +104,7 @@ public class PlayerIndicatorsOverlay extends Overlay
 				}
 			}
 
-			OverlayUtil.renderTextLocation(graphics, textLocation, name, color);
+			OverlayUtil.renderTextLocation(graphics, textLocation, text, color);
 		}
 	}
 }
