@@ -187,7 +187,18 @@ public interface PlayerIndicatorsConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 14,
+			position = 14,
+			keyName = "drawMinimapLevels",
+			name = "Draw levels on minimap",
+			description = "Configures whether or not minimap levels for players with rendered names should be drawn"
+	)
+	default boolean drawMinimapLevels()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		position = 15,
 		keyName = "colorPlayerMenu",
 		name = "Colorize player menu",
 		description = "Color right click menu for players"
@@ -198,7 +209,7 @@ public interface PlayerIndicatorsConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 15,
+		position = 16,
 		keyName = "clanMenuIcons",
 		name = "Show clan ranks",
 		description = "Add clan rank to right click menu and next to player names"
