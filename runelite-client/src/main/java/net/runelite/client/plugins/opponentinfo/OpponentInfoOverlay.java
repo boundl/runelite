@@ -75,7 +75,7 @@ class OpponentInfoOverlay extends Overlay
 		this.opponentInfoConfig = opponentInfoConfig;
 		this.hiscoreManager = hiscoreManager;
 
-		setPosition(OverlayPosition.TOP_LEFT);
+		setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
 		setPriority(OverlayPriority.HIGH);
 
 		panelComponent.setBorder(new Rectangle(2, 2, 2, 2));
