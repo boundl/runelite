@@ -27,7 +27,19 @@ public class PKHelperService
     {
         int y = point.getY();               //v underground           //v above ground
         int wildernessLevel = y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1;
-        return wildernessLevel > 0 ? wildernessLevel : 15; //if wildy level is below zero we assume it's a pvp world which is -15 to 15 level difference
+
+        switch (client.getWorld())
+        {
+            case 337:
+            case 371:
+            case 417:
+            case 392:
+            case 325:
+                return 15;
+            default: break;
+        }
+
+        return Math.max(0, wildernessLevel);
     }
 
     public static int clamp(int val, int min, int max)
@@ -49,6 +61,9 @@ public class PKHelperService
 
             int lvlDelta =  player.getCombatLevel() - localPlayer.getCombatLevel();
             int wildyLvl = getWildernessLevelFrom(player.getWorldLocation());
+
+            if (wildyLvl <= 0)
+                continue;
 
             if (Math.abs(lvlDelta) > wildyLvl)
                 continue;

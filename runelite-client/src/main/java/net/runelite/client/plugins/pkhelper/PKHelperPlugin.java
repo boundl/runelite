@@ -3,8 +3,6 @@ package net.runelite.client.plugins.pkhelper;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Provides;
 import java.awt.Color;
-import java.time.Instant;
-import java.util.List;
 import javax.inject.Inject;
 
 import lombok.AccessLevel;
@@ -14,7 +12,6 @@ import net.runelite.api.Client;
 import static net.runelite.api.MenuAction.*;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.Player;
-import net.runelite.api.events.InteractingChanged;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.config.ConfigManager;
@@ -22,6 +19,7 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.ColorUtil;
+import net.runelite.client.util.Text;
 
 @PluginDescriptor(
         name = "PK Helper Plugin",
@@ -78,7 +76,19 @@ public class PKHelperPlugin extends Plugin
     {
         int y = point.getY();               //v underground           //v above ground
         int wildernessLevel = y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1;
-        return wildernessLevel > 0 ? wildernessLevel : 15; //if wildy level is below zero we assume it's a pvp world which is -15 to 15 level difference
+
+        switch (client.getWorld())
+        {
+            case 337:
+            case 371:
+            case 417:
+            case 392:
+            case 325:
+                return 15;
+            default: break;
+        }
+
+        return Math.max(0, wildernessLevel);
     }
 
     public static int clamp(int val, int min, int max)
@@ -90,6 +100,7 @@ public class PKHelperPlugin extends Plugin
     public void onMenuEntryAdd(MenuEntryAdded menuEntryAdded)
     {
         int type = menuEntryAdded.getType();
+        String option = Text.removeTags(menuEntryAdded.getOption()).toLowerCase();
 
         if (type >= 2000)
             type -= 2000;
@@ -123,6 +134,9 @@ public class PKHelperPlugin extends Plugin
             {
                 int lvlDelta =  player.getCombatLevel() - localPlayer.getCombatLevel();
                 int wildyLvl = getWildernessLevelFrom(player.getWorldLocation());
+
+                if (wildyLvl <= 0)
+                    return;
 
                 int R = clamp((int)(((float)(lvlDelta + wildyLvl) / (float)(wildyLvl * 2)) * 255.f), 0, 255);
                 int G = clamp(255 - R, 0, 255);
