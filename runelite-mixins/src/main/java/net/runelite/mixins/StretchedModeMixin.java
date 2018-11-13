@@ -24,7 +24,6 @@
  */
 package net.runelite.mixins;
 
-import com.google.common.primitives.Ints;
 import java.awt.Container;
 import java.awt.Dimension;
 import net.runelite.api.Constants;
@@ -102,9 +101,7 @@ public abstract class StretchedModeMixin implements RSClient
 	@Override
 	public void setScalingFactor(int factor)
 	{
-		factor = Ints.constrainToRange(factor, 0, 100);
-
-		scalingFactor = (100 - factor) / 100D;
+		scalingFactor = 1 + (factor / 100D);
 	}
 
 	@Inject
@@ -125,11 +122,18 @@ public abstract class StretchedModeMixin implements RSClient
 				int parentWidth = canvasParent.getWidth();
 				int parentHeight = canvasParent.getHeight();
 
-				int widthOffset = parentWidth - Constants.GAME_FIXED_WIDTH;
-				int heightOffset = parentHeight - Constants.GAME_FIXED_HEIGHT;
+				int newWidth = (int) (parentWidth / scalingFactor);
+				int newHeight = (int) (parentHeight / scalingFactor);
 
-				int newWidth = Constants.GAME_FIXED_WIDTH + (int) (widthOffset * scalingFactor);
-				int newHeight = Constants.GAME_FIXED_HEIGHT + (int) (heightOffset * scalingFactor);
+				if (newWidth < Constants.GAME_FIXED_WIDTH || newHeight < Constants.GAME_FIXED_HEIGHT)
+				{
+					double scalingFactorW = (double)parentWidth / Constants.GAME_FIXED_WIDTH;
+					double scalingFactorH = (double)parentHeight / Constants.GAME_FIXED_HEIGHT;
+					double scalingFactor = Math.min(scalingFactorW, scalingFactorH);
+
+					newWidth = (int) (parentWidth / scalingFactor);
+					newHeight = (int) (parentHeight / scalingFactor);
+				}
 
 				cachedRealDimensions = new Dimension(newWidth, newHeight);
 			}
