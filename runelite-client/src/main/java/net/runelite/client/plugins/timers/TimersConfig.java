@@ -190,4 +190,14 @@ public interface TimersConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+			keyName = "showFreezeBar",
+			name = "Freeze timer bar",
+			description = "Draws freeze timer bars under health."
+	)
+	default boolean showFreezeBar()
+	{
+		return true;
+	}
 }

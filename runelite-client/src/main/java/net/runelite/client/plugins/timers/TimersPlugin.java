@@ -68,6 +68,8 @@ import net.runelite.client.game.SpriteManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import static net.runelite.client.plugins.timers.GameTimer.*;
+
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
 
 @PluginDescriptor(
@@ -106,8 +108,8 @@ public class TimersPlugin extends Plugin
 	private static final String SUPER_ANTIFIRE_EXPIRED_MESSAGE = "<col=7f007f>Your super antifire potion has expired.</col>";
 	private static final String SUPER_ANTIVENOM_DRINK_MESSAGE = "You drink some of your super antivenom potion";
 
-	private TimerTimer freezeTimer;
-	private int freezeTime = -1; // time frozen, in game ticks
+	public TimerTimer freezeTimer;
+	public int freezeTime = -1; // time frozen, in game ticks
 
 	private int lastRaidVarb;
 	private int lastWildernessVarb;
@@ -132,10 +134,22 @@ public class TimersPlugin extends Plugin
 	@Inject
 	private InfoBoxManager infoBoxManager;
 
+	@Inject
+	private OverlayManager overlayManager;
+
+	@Inject
+	private FreezeBarOverlay barOverlay;
+
 	@Provides
 	TimersConfig getConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(TimersConfig.class);
+	}
+
+	@Override
+	protected void startUp()
+	{
+		overlayManager.add(barOverlay);
 	}
 
 	@Override
@@ -148,6 +162,8 @@ public class TimersPlugin extends Plugin
 		lastAnimation = -1;
 		loggedInRace = false;
 		widgetHiddenChangedOnPvpWorld = false;
+
+		overlayManager.remove(barOverlay);
 	}
 
 	@Subscribe
@@ -526,6 +542,11 @@ public class TimersPlugin extends Plugin
 				removeGameTimer(freezeTimer.getTimer());
 				freezeTimer = null;
 			}
+		}
+
+		if (config.showFreezeBar())
+		{
+			barOverlay.onTick();
 		}
 
 		lastPoint = currentWorldPoint;
