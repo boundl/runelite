@@ -437,6 +437,8 @@ public class ReorderPrayersPlugin extends Plugin
 				Widget prayerWidget = prayerWidgets[QUICK_PRAYER_CHILD_IDS.get(prayer.ordinal())];
 				setWidgetPosition(prayerWidget, x * PRAYER_X_OFFSET, y * PRAYER_Y_OFFSET);
 
+				//prayerWidget.setHidden(true);
+
 				int childId = PRAYER_COUNT + 2 * prayer.ordinal();
 
 				Widget prayerSpriteWidget = prayerWidgets[childId];
