@@ -28,6 +28,8 @@ package net.runelite.client.plugins.timers;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Provides;
 import java.awt.image.BufferedImage;
+import java.time.Duration;
+import java.time.Instant;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Actor;

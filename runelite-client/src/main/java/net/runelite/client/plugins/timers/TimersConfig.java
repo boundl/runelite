@@ -200,4 +200,18 @@ public interface TimersConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+			keyName = "freezeBarHeight",
+			name = "Freeze bar height",
+			description = "The height of the freeze bar."
+	)
+	default int freezeBarHeight() { return 8; }
+
+	@ConfigItem(
+			keyName = "showFreezeBarCount",
+			name = "Freeze bar counter",
+			description = "Draws amount of seconds left for the current freeze."
+	)
+	default boolean showFreezeBarCount() { return true; }
 }
