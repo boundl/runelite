@@ -31,7 +31,7 @@ public class PKHelperMinimapOverlay extends Overlay
     {
         pkHelperService.forEachPlayer((player, color) -> renderPlayerOverlay(graphics, player, color));
         return null;
-    }
+}
 
     private void renderPlayerOverlay(Graphics2D graphics, Player actor, Color color)
     {

@@ -30,6 +30,7 @@ import com.google.inject.Provides;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import net.runelite.api.Client;
@@ -364,6 +365,104 @@ public class ReorderPrayersPlugin extends Plugin
 		reorderPrayers(config.unlockPrayerReordering());
 	}
 
+	private void doHidePrayers(Widget prayerWidget)
+	{
+		String name = prayerWidget.getName();
+		name = name.substring(12).toLowerCase();
+
+		switch (name)
+		{
+			case "thick skin":
+				prayerWidget.setHidden(config.hideThickSkin());
+				break;
+			case "burst of strength":
+				prayerWidget.setHidden(config.hideBurstOfStrength());
+				break;
+			case "clarity of thought":
+				prayerWidget.setHidden(config.hideClarityOfThought());
+				break;
+			case "sharp eye":
+				prayerWidget.setHidden(config.hideSharpEye());
+				break;
+			case "mystic will":
+				prayerWidget.setHidden(config.hideMysticWill());
+				break;
+			case "rock skin":
+				prayerWidget.setHidden(config.hideRockSkin());
+				break;
+			case "superhuman strength":
+				prayerWidget.setHidden(config.hideSuperhumanStrength());
+				break;
+			case "improved reflexes":
+				prayerWidget.setHidden(config.hideImprovedReflexes());
+				break;
+			case "rapid restore":
+				prayerWidget.setHidden(config.hideRapidRestore());
+				break;
+			case "rapid heal":
+				prayerWidget.setHidden(config.hideRapidHeal());
+				break;
+			case "protect item":
+				prayerWidget.setHidden(config.hideProtectItem());
+				break;
+			case "hawk eye":
+				prayerWidget.setHidden(config.hideHawkEye());
+				break;
+			case "mystic lore":
+				prayerWidget.setHidden(config.hideMysticLore());
+				break;
+			case "steel skin":
+				prayerWidget.setHidden(config.hideSteelSkin());
+				break;
+			case "ultimate strength":
+				prayerWidget.setHidden(config.hideUltimateStrength());
+				break;
+			case "incredible reflexes":
+				prayerWidget.setHidden(config.hideIncredibleReflexes());
+				break;
+			case "protect from magic":
+				prayerWidget.setHidden(config.hideProtectFromMagic());
+				break;
+			case "protect from missiles":
+				prayerWidget.setHidden(config.hideProtectFromMissiles());
+				break;
+			case "protect from melee":
+				prayerWidget.setHidden(config.hideProtectFromMelee());
+				break;
+			case "eagle eye":
+				prayerWidget.setHidden(config.hideEagleEye());
+				break;
+			case "mystic might":
+				prayerWidget.setHidden(config.hideMysticMight());
+				break;
+			case "retribution":
+				prayerWidget.setHidden(config.hideRetribution());
+				break;
+			case "redemption":
+				prayerWidget.setHidden(config.hideRedemption());
+				break;
+			case "smite":
+				prayerWidget.setHidden(config.hideSmite());
+				break;
+			case "preserve":
+				prayerWidget.setHidden(config.hidePreserve());
+				break;
+			case "chivalry":
+				prayerWidget.setHidden(config.hideChivalry());
+				break;
+			case "piety":
+				prayerWidget.setHidden(config.hidePiety());
+				break;
+			case "rigour":
+				prayerWidget.setHidden(config.hideRigour());
+				break;
+			case "augury":
+				prayerWidget.setHidden(config.hideAugury());
+				break;
+			default: break;
+		}
+	}
+
 	private void reorderPrayers(boolean unlocked)
 	{
 		if (client.getGameState() != GameState.LOGGED_IN)
@@ -407,6 +506,8 @@ public class ReorderPrayersPlugin extends Plugin
 				}
 				prayerWidget.setClickMask(widgetConfig);
 
+				doHidePrayers(prayerWidget);
+
 				int x = index % PRAYER_COLUMN_COUNT;
 				int y = index / PRAYER_COLUMN_COUNT;
 				int widgetX = x * PRAYER_X_OFFSET;
@@ -437,11 +538,10 @@ public class ReorderPrayersPlugin extends Plugin
 				Widget prayerWidget = prayerWidgets[QUICK_PRAYER_CHILD_IDS.get(prayer.ordinal())];
 				setWidgetPosition(prayerWidget, x * PRAYER_X_OFFSET, y * PRAYER_Y_OFFSET);
 
-				//prayerWidget.setHidden(true);
-
 				int childId = PRAYER_COUNT + 2 * prayer.ordinal();
 
 				Widget prayerSpriteWidget = prayerWidgets[childId];
+
 				setWidgetPosition(prayerSpriteWidget,
 						QUICK_PRAYER_SPRITE_X_OFFSET + x * PRAYER_X_OFFSET,
 						QUICK_PRAYER_SPRITE_Y_OFFSET + y * PRAYER_Y_OFFSET);
@@ -451,5 +551,4 @@ public class ReorderPrayersPlugin extends Plugin
 			}
 		}
 	}
-
 }
