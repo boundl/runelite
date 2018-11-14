@@ -66,7 +66,7 @@ class FreezeBarOverlay extends Overlay
 
         // Draw bar
         final int barX = canvasPoint.getX() - 15;
-        final int barY = canvasPoint.getY() - config.freezeBarHeight();
+        final int barY = canvasPoint.getY() - config.freezeBarHeight() + 15;
         final int barWidth = FREEZE_BAR_SIZE.width;
         final int barHeight = FREEZE_BAR_SIZE.height;
 

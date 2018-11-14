@@ -206,7 +206,7 @@ public interface TimersConfig extends Config
 			name = "Freeze bar height",
 			description = "The height of the freeze bar."
 	)
-	default int freezeBarHeight() { return 8; }
+	default int freezeBarHeight() { return 23; }
 
 	@ConfigItem(
 			keyName = "showFreezeBarCount",
