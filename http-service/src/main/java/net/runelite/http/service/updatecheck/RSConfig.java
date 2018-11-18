@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018, Adam <Adam@sigterm.info>
+ * Copyright (c) 2018, Tomas Slusny <slusnucky@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,62 +23,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.xptracker;
+package net.runelite.http.service.updatecheck;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import net.runelite.api.Skill;
+import java.util.HashMap;
+import java.util.Map;
+import lombok.Getter;
 
-@Singleton
-class XpTrackerServiceImpl implements XpTrackerService
+@Getter
+class RSConfig
 {
-	private final XpTrackerPlugin plugin;
+	private final Map<String, String> appletProperties = new HashMap<>();
+	private final Map<String, String> classLoaderProperties = new HashMap<>();
 
-	@Inject
-	XpTrackerServiceImpl(XpTrackerPlugin plugin)
+	String getCodeBase()
 	{
-		this.plugin = plugin;
+		return classLoaderProperties.get("codebase");
 	}
 
-	@Override
-	public int getActions(Skill skill)
+	String getInitialJar()
 	{
-		return plugin.getSkillSnapshot(skill).getActionsInSession();
+		return classLoaderProperties.get("initial_jar");
 	}
 
-	@Override
-	public int getActionsHr(Skill skill)
+	String getInitialClass()
 	{
-		return plugin.getSkillSnapshot(skill).getActionsPerHour();
-	}
-
-	@Override
-	public int getActionsLeft(Skill skill)
-	{
-		return plugin.getSkillSnapshot(skill).getActionsRemainingToGoal();
-	}
-
-	@Override
-	public XpActionType getActionType(Skill skill)
-	{
-		return plugin.getSkillSnapshot(skill).getActionType();
-	}
-
-	@Override
-	public int getXpHr(Skill skill)
-	{
-		return plugin.getSkillSnapshot(skill).getXpPerHour();
-	}
-
-	@Override
-	public int getStartGoalXp(Skill skill)
-	{
-		return plugin.getSkillSnapshot(skill).getStartGoalXp();
-	}
-
-	@Override
-	public int getEndGoalXp(Skill skill)
-	{
-		return plugin.getSkillSnapshot(skill).getEndGoalXp();
+		return classLoaderProperties.get("initial_class").replace(".class", "");
 	}
 }

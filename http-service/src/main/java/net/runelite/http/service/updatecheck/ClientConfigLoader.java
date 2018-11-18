@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018, Adam <Adam@sigterm.info>
+ * Copyright (c) 2018, Tomas Slusny <slusnucky@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,62 +23,62 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.xptracker;
+package net.runelite.http.service.updatecheck;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import net.runelite.api.Skill;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import net.runelite.http.api.RuneLiteAPI;
+import okhttp3.Request;
+import okhttp3.Response;
 
-@Singleton
-class XpTrackerServiceImpl implements XpTrackerService
+class ClientConfigLoader
 {
-	private final XpTrackerPlugin plugin;
+	private static final String CONFIG_URL = "http://oldschool.runescape.com/jav_config.ws";
 
-	@Inject
-	XpTrackerServiceImpl(XpTrackerPlugin plugin)
+	static RSConfig fetch() throws IOException
 	{
-		this.plugin = plugin;
-	}
+		final Request request = new Request.Builder()
+			.url(CONFIG_URL)
+			.build();
 
-	@Override
-	public int getActions(Skill skill)
-	{
-		return plugin.getSkillSnapshot(skill).getActionsInSession();
-	}
+		final RSConfig config = new RSConfig();
 
-	@Override
-	public int getActionsHr(Skill skill)
-	{
-		return plugin.getSkillSnapshot(skill).getActionsPerHour();
-	}
+		try (final Response response = RuneLiteAPI.CLIENT.newCall(request).execute(); final BufferedReader in = new BufferedReader(
+			new InputStreamReader(response.body().byteStream())))
+		{
+			String str;
 
-	@Override
-	public int getActionsLeft(Skill skill)
-	{
-		return plugin.getSkillSnapshot(skill).getActionsRemainingToGoal();
-	}
+			while ((str = in.readLine()) != null)
+			{
+				int idx = str.indexOf('=');
 
-	@Override
-	public XpActionType getActionType(Skill skill)
-	{
-		return plugin.getSkillSnapshot(skill).getActionType();
-	}
+				if (idx == -1)
+				{
+					continue;
+				}
 
-	@Override
-	public int getXpHr(Skill skill)
-	{
-		return plugin.getSkillSnapshot(skill).getXpPerHour();
-	}
+				String s = str.substring(0, idx);
 
-	@Override
-	public int getStartGoalXp(Skill skill)
-	{
-		return plugin.getSkillSnapshot(skill).getStartGoalXp();
-	}
+				switch (s)
+				{
+					case "param":
+						str = str.substring(idx + 1);
+						idx = str.indexOf('=');
+						s = str.substring(0, idx);
 
-	@Override
-	public int getEndGoalXp(Skill skill)
-	{
-		return plugin.getSkillSnapshot(skill).getEndGoalXp();
+						config.getAppletProperties().put(s, str.substring(idx + 1));
+						break;
+					case "msg":
+						// ignore
+						break;
+					default:
+						config.getClassLoaderProperties().put(s, str.substring(idx + 1));
+						break;
+				}
+			}
+		}
+
+		return config;
 	}
 }
