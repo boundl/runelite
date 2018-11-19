@@ -35,7 +35,6 @@ import static net.runelite.api.MenuAction.*;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.Player;
 import net.runelite.api.events.MenuEntryAdded;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.game.ClanManager;
 import net.runelite.client.plugins.Plugin;
@@ -44,9 +43,9 @@ import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.ColorUtil;
 
 @PluginDescriptor(
-	name = "Player Indicators",
-	description = "Highlight players on-screen and/or on the minimap",
-	tags = {"highlight", "minimap", "overlay", "players"}
+		name = "Player Indicators",
+		description = "Highlight players on-screen and/or on the minimap",
+		tags = {"highlight", "minimap", "overlay", "players"}
 )
 public class PlayerIndicatorsPlugin extends Plugin
 {
@@ -93,19 +92,6 @@ public class PlayerIndicatorsPlugin extends Plugin
 		overlayManager.remove(playerIndicatorsMinimapOverlay);
 	}
 
-	int getWildernessLevelFrom(WorldPoint point)
-	{
-		int y = point.getY();
-
-		int underLevel = ((y - 9920) / 8) + 1;
-		int upperLevel = ((y - 3520) / 8) + 1;
-		int wildernessLevel = y > 6400 ? underLevel : upperLevel;
-
-		// Add special cases here which do not follow the formula
-
-		return wildernessLevel > 0 ? wildernessLevel : 0;
-	}
-
 	@Subscribe
 	public void onMenuEntryAdded(MenuEntryAdded menuEntryAdded)
 	{
@@ -118,16 +104,16 @@ public class PlayerIndicatorsPlugin extends Plugin
 
 		int identifier = menuEntryAdded.getIdentifier();
 		if (type == FOLLOW.getId() || type == TRADE.getId()
-			|| type == SPELL_CAST_ON_PLAYER.getId() || type == ITEM_USE_ON_PLAYER.getId()
-			|| type == PLAYER_FIRST_OPTION.getId()
-			|| type == PLAYER_SECOND_OPTION.getId()
-			|| type == PLAYER_THIRD_OPTION.getId()
-			|| type == PLAYER_FOURTH_OPTION.getId()
-			|| type == PLAYER_FIFTH_OPTION.getId()
-			|| type == PLAYER_SIXTH_OPTION.getId()
-			|| type == PLAYER_SEVENTH_OPTION.getId()
-			|| type == PLAYER_EIGTH_OPTION.getId()
-			|| type == RUNELITE.getId())
+				|| type == SPELL_CAST_ON_PLAYER.getId() || type == ITEM_USE_ON_PLAYER.getId()
+				|| type == PLAYER_FIRST_OPTION.getId()
+				|| type == PLAYER_SECOND_OPTION.getId()
+				|| type == PLAYER_THIRD_OPTION.getId()
+				|| type == PLAYER_FOURTH_OPTION.getId()
+				|| type == PLAYER_FIFTH_OPTION.getId()
+				|| type == PLAYER_SIXTH_OPTION.getId()
+				|| type == PLAYER_SEVENTH_OPTION.getId()
+				|| type == PLAYER_EIGTH_OPTION.getId()
+				|| type == RUNELITE.getId())
 		{
 			final Player localPlayer = client.getLocalPlayer();
 			Player[] players = client.getCachedPlayers();
@@ -166,11 +152,7 @@ public class PlayerIndicatorsPlugin extends Plugin
 			}
 			else if (config.highlightNonClanMembers() && !player.isClanMember())
 			{
-				int lvlDelta = localPlayer.getCombatLevel() - player.getCombatLevel();
-				if (lvlDelta <= getWildernessLevelFrom(player.getWorldLocation()))
-					color = new Color(255, 0, 255);
-
-				//color = config.getNonClanMemberColor();
+				color = config.getNonClanMemberColor();
 			}
 
 			if (image != -1 || color != null)

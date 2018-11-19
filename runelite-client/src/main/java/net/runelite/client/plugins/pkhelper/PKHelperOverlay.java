@@ -15,7 +15,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
 import net.runelite.client.ui.overlay.OverlayUtil;
 
-
+@Singleton
 public class PKHelperOverlay extends Overlay
 {
     private final PKHelperService pkHelperService;
@@ -49,12 +49,9 @@ public class PKHelperOverlay extends Overlay
         if (config.drawPlayerNames())
             text += actor.getName().replace('\u00A0', ' ');
 
-        int offset = actor.getLogicalHeight() + 40;
-        Point textLocation = actor.getCanvasTextLocation(graphics, text, offset);
+        Point textLocation = actor.getCanvasTextLocation(graphics, text, actor.getLogicalHeight() + 40);
 
         if (textLocation != null)
-        {
             OverlayUtil.renderTextLocation(graphics, textLocation, text, color);
-        }
     }
 }

@@ -47,9 +47,6 @@ public class PKHelperPlugin extends Plugin
     @Inject
     private Client client;
 
-    @Getter(AccessLevel.PACKAGE)
-    private Actor lastOpponent;
-
     @Provides
     PKHelperConfig provideConfig(ConfigManager configManager)
     {
@@ -75,7 +72,8 @@ public class PKHelperPlugin extends Plugin
     int getWildernessLevelFrom(WorldPoint point)
     {
         int y = point.getY();               //v underground           //v above ground
-        int wildernessLevel = y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1;
+
+        int wildernessLevel = clamp(y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1, 0, 99);
 
         switch (client.getWorld())
         {
@@ -83,8 +81,8 @@ public class PKHelperPlugin extends Plugin
             case 371:
             case 417:
             case 392:
-            case 325:
-                return 15;
+            case 324:
+                wildernessLevel += 15;
             default: break;
         }
 
@@ -97,7 +95,7 @@ public class PKHelperPlugin extends Plugin
     }
 
     @Subscribe
-    public void onMenuEntryAdd(MenuEntryAdded menuEntryAdded)
+    public void onMenuEntryAdded(MenuEntryAdded menuEntryAdded)
     {
         int type = menuEntryAdded.getType();
         String option = Text.removeTags(menuEntryAdded.getOption()).toLowerCase();
@@ -126,11 +124,11 @@ public class PKHelperPlugin extends Plugin
 
             Color color = null;
 
-            if (config.highlightFriends() && player.isFriend())
+            if (config.highlightFriends() && (player.isFriend() || player.isClanMember()))
             {
                 color = config.getFriendColor();
             }
-            else if (!player.isFriend())
+            else if (!player.isFriend() && !player.isClanMember())
             {
                 int lvlDelta =  player.getCombatLevel() - localPlayer.getCombatLevel();
                 int wildyLvl = getWildernessLevelFrom(player.getWorldLocation());
