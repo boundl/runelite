@@ -61,21 +61,16 @@ public class PlayerIndicatorsMinimapOverlay extends Overlay
 
 	private void renderPlayerOverlay(Graphics2D graphics, Player actor, Color color)
 	{
-		if (!config.drawMinimapNames() && !config.drawMinimapLevels())
-			return;
-
 		final String name = actor.getName().replace('\u00A0', ' ');
-		final String level = Integer.toString(actor.getCombatLevel());
 
-		String text = "";
-		if (config.drawMinimapLevels())
-			text += (level + " ");
 		if (config.drawMinimapNames())
-			text += name;
+		{
+			final net.runelite.api.Point minimapLocation = actor.getMinimapLocation();
 
-		final net.runelite.api.Point minimapLocation = actor.getMinimapLocation();
-
-		if (minimapLocation != null)
-			OverlayUtil.renderTextLocation(graphics, minimapLocation, text, color);
+			if (minimapLocation != null)
+			{
+				OverlayUtil.renderTextLocation(graphics, minimapLocation, name, color);
+			}
+		}
 	}
 }

@@ -48,7 +48,7 @@ public class PlayerIndicatorsOverlay extends Overlay
 
 	@Inject
 	private PlayerIndicatorsOverlay(PlayerIndicatorsConfig config, PlayerIndicatorsService playerIndicatorsService,
-		ClanManager clanManager)
+									ClanManager clanManager)
 	{
 		this.config = config;
 		this.playerIndicatorsService = playerIndicatorsService;
@@ -66,26 +66,20 @@ public class PlayerIndicatorsOverlay extends Overlay
 
 	private void renderPlayerOverlay(Graphics2D graphics, Player actor, Color color)
 	{
-		if (!config.drawOverheadPlayerNames() && !config.drawOverheadPlayerLevels())
+		if (!config.drawOverheadPlayerNames())
 		{
 			return;
 		}
 
-		String text = "";
-		if (config.drawOverheadPlayerLevels())
-			text += "(" + Integer.toString(actor.getCombatLevel()) + ") ";
-
-		if (config.drawOverheadPlayerNames())
-			text += actor.getName().replace('\u00A0', ' ');
-
+		String name = actor.getName().replace('\u00A0', ' ');
 		int offset = actor.getLogicalHeight() + 40;
-		Point textLocation = actor.getCanvasTextLocation(graphics, text, offset);
+		Point textLocation = actor.getCanvasTextLocation(graphics, name, offset);
 
 		if (textLocation != null)
 		{
 			if (config.showClanRanks() && actor.isClanMember())
 			{
-				ClanMemberRank rank = clanManager.getRank(text);
+				ClanMemberRank rank = clanManager.getRank(name);
 
 				if (rank != ClanMemberRank.UNRANKED)
 				{
@@ -104,7 +98,7 @@ public class PlayerIndicatorsOverlay extends Overlay
 				}
 			}
 
-			OverlayUtil.renderTextLocation(graphics, textLocation, text, color);
+			OverlayUtil.renderTextLocation(graphics, textLocation, name, color);
 		}
 	}
 }

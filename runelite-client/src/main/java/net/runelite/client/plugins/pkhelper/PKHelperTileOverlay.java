@@ -29,18 +29,14 @@ public class PKHelperTileOverlay extends Overlay
     public Dimension render(Graphics2D graphics)
     {
         if (!config.drawTiles())
-        {
             return null;
-        }
 
         pkHelperService.forEachPlayer((player, color) ->
         {
             final Polygon poly = player.getCanvasTilePoly();
 
             if (poly != null)
-            {
                 OverlayUtil.renderPolygon(graphics, poly, color);
-            }
         });
 
         return null;

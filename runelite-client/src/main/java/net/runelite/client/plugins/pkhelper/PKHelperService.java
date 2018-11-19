@@ -26,7 +26,8 @@ public class PKHelperService
     int getWildernessLevelFrom(WorldPoint point)
     {
         int y = point.getY();               //v underground           //v above ground
-        int wildernessLevel = y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1;
+
+        int wildernessLevel = clamp(y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1, 0, 99);
 
         switch (client.getWorld())
         {
@@ -34,8 +35,8 @@ public class PKHelperService
             case 371:
             case 417:
             case 392:
-            case 325:
-                return 15;
+            case 324:
+                wildernessLevel += 15;
             default: break;
         }
 
@@ -49,9 +50,6 @@ public class PKHelperService
 
     public void forEachPlayer(final BiConsumer<Player, Color> consumer)
     {
-        if (!config.highlightOwnPlayer() && !config.highlightFriends())
-            return;
-
         final Player localPlayer = client.getLocalPlayer();
 
         for (Player player : client.getPlayers())
@@ -72,11 +70,11 @@ public class PKHelperService
             {
                 consumer.accept(player, config.getOwnPlayerColor());
             }
-            else if (config.highlightFriends() && player.isFriend())
+            else if (config.highlightFriends() && (player.isFriend() || player.isClanMember()))
             {
                 consumer.accept(player, config.getFriendColor());
             }
-            else if (player != localPlayer && !player.isFriend())
+            else if (player != localPlayer && !player.isFriend() && !player.isClanMember())
             {
                 int R = clamp((int)(((float)(lvlDelta + wildyLvl) / (float)(wildyLvl * 2)) * 255.f), 0, 255);
                 int G = clamp(255 - R, 0, 255);
