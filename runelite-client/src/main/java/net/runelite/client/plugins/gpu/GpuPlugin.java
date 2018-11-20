@@ -26,7 +26,6 @@ package net.runelite.client.plugins.gpu;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Provides;
-import com.jogamp.nativewindow.NativeSurface;
 import com.jogamp.nativewindow.awt.AWTGraphicsConfiguration;
 import com.jogamp.nativewindow.awt.JAWTWindow;
 import com.jogamp.opengl.GL;
@@ -49,6 +48,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.function.Function;
 import javax.inject.Inject;
+import jogamp.nativewindow.jawt.x11.X11JAWTWindow;
 import jogamp.newt.awt.NewtFactoryAWT;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.BufferProvider;
@@ -255,7 +255,8 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 					throw new GLException("Unable to make context current");
 				}
 
-				if (jawtWindow.getLock().isLocked())
+				// Surface needs to be unlocked on X11 window otherwise input is blocked
+				if (jawtWindow instanceof X11JAWTWindow && jawtWindow.getLock().isLocked())
 				{
 					jawtWindow.unlockSurface();
 				}
@@ -328,11 +329,6 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 			client.setGpu(false);
 			client.setDrawCallbacks(null);
 
-			if (jawtWindow.getLock().getHoldCount() != NativeSurface.LOCK_SURFACE_NOT_READY)
-			{
-				jawtWindow.lockSurface();
-			}
-
 			if (bufferId != -1)
 			{
 				GLUtil.glDeleteBuffer(gl, bufferId);
@@ -355,7 +351,13 @@ public class GpuPlugin extends Plugin implements DrawCallbacks
 			shutdownProgram();
 			shutdownVao();
 
+			if (!jawtWindow.getLock().isLocked())
+			{
+				jawtWindow.lockSurface();
+			}
+
 			glContext.destroy();
+			NewtFactoryAWT.destroyNativeWindow(jawtWindow);
 
 			jawtWindow = null;
 			gl = null;
