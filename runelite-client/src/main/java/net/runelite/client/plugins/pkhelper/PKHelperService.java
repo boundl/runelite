@@ -57,6 +57,12 @@ public class PKHelperService
             if (player == null || player.getName() == null)
                 continue;
 
+            if (player == localPlayer && config.highlightOwnPlayer())
+            {
+                consumer.accept(player, config.getOwnPlayerColor());
+                continue;
+            }
+
             int lvlDelta =  player.getCombatLevel() - localPlayer.getCombatLevel();
             int wildyLvl = getWildernessLevelFrom(player.getWorldLocation());
 
@@ -66,11 +72,7 @@ public class PKHelperService
             if (Math.abs(lvlDelta) > wildyLvl)
                 continue;
 
-            if (player == localPlayer && config.highlightOwnPlayer())
-            {
-                consumer.accept(player, config.getOwnPlayerColor());
-            }
-            else if (config.highlightFriends() && (player.isFriend() || player.isClanMember()))
+            if (config.highlightFriends() && (player.isFriend() || player.isClanMember()))
             {
                 consumer.accept(player, config.getFriendColor());
             }
