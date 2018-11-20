@@ -59,38 +59,6 @@ public class HidePrayersPlugin extends Plugin
             WidgetInfo.PRAYER_AUGURY
     );
 
-    private static final List<Integer> QUICK_PRAYER_CHILD_IDS = ImmutableList.of(
-            WidgetID.QuickPrayer.THICK_SKIN_CHILD_ID,
-            WidgetID.QuickPrayer.BURST_OF_STRENGTH_CHILD_ID,
-            WidgetID.QuickPrayer.CLARITY_OF_THOUGHT_CHILD_ID,
-            WidgetID.QuickPrayer.SHARP_EYE_CHILD_ID,
-            WidgetID.QuickPrayer.MYSTIC_WILL_CHILD_ID,
-            WidgetID.QuickPrayer.ROCK_SKIN_CHILD_ID,
-            WidgetID.QuickPrayer.SUPERHUMAN_STRENGTH_CHILD_ID,
-            WidgetID.QuickPrayer.IMPROVED_REFLEXES_CHILD_ID,
-            WidgetID.QuickPrayer.RAPID_RESTORE_CHILD_ID,
-            WidgetID.QuickPrayer.RAPID_HEAL_CHILD_ID,
-            WidgetID.QuickPrayer.PROTECT_ITEM_CHILD_ID,
-            WidgetID.QuickPrayer.HAWK_EYE_CHILD_ID,
-            WidgetID.QuickPrayer.MYSTIC_LORE_CHILD_ID,
-            WidgetID.QuickPrayer.STEEL_SKIN_CHILD_ID,
-            WidgetID.QuickPrayer.ULTIMATE_STRENGTH_CHILD_ID,
-            WidgetID.QuickPrayer.INCREDIBLE_REFLEXES_CHILD_ID,
-            WidgetID.QuickPrayer.PROTECT_FROM_MAGIC_CHILD_ID,
-            WidgetID.QuickPrayer.PROTECT_FROM_MISSILES_CHILD_ID,
-            WidgetID.QuickPrayer.PROTECT_FROM_MELEE_CHILD_ID,
-            WidgetID.QuickPrayer.EAGLE_EYE_CHILD_ID,
-            WidgetID.QuickPrayer.MYSTIC_MIGHT_CHILD_ID,
-            WidgetID.QuickPrayer.RETRIBUTION_CHILD_ID,
-            WidgetID.QuickPrayer.REDEMPTION_CHILD_ID,
-            WidgetID.QuickPrayer.SMITE_CHILD_ID,
-            WidgetID.QuickPrayer.PRESERVE_CHILD_ID,
-            WidgetID.QuickPrayer.CHIVALRY_CHILD_ID,
-            WidgetID.QuickPrayer.PIETY_CHILD_ID,
-            WidgetID.QuickPrayer.RIGOUR_CHILD_ID,
-            WidgetID.QuickPrayer.AUGURY_CHILD_ID
-    );
-
     @Inject
     private Client client;
 
@@ -112,7 +80,7 @@ public class HidePrayersPlugin extends Plugin
     @Override
     protected void shutDown() throws Exception
     {
-        hidePrayers();
+        restorePrayers();
     }
 
     @Subscribe
@@ -159,6 +127,28 @@ public class HidePrayersPlugin extends Plugin
         return PrayerTabState.NONE;
     }
 
+    private void restorePrayers()
+    {
+        if (client.getGameState() != GameState.LOGGED_IN)
+            return;
+
+        PrayerTabState prayerTabState = getPrayerTabState();
+
+        if (prayerTabState == PrayerTabState.PRAYERS)
+        {
+            List<Widget> prayerWidgets = PRAYER_WIDGET_INFO_LIST.stream()
+                    .map(client::getWidget)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            if (prayerWidgets.size() != PRAYER_WIDGET_INFO_LIST.size())
+                return;
+
+            for (int index = 0; index < PRAYER_COUNT; index++)
+                prayerWidgets.get(Prayer.values()[index].ordinal()).setHidden(false);
+        }
+    }
+
     private void hidePrayers()
     {
         if (client.getGameState() != GameState.LOGGED_IN)
@@ -176,7 +166,7 @@ public class HidePrayersPlugin extends Plugin
             if (prayerWidgets.size() != PRAYER_WIDGET_INFO_LIST.size())
                 return;
 
-            for (int index = 0; index < Prayer.values().length; index++)
+            for (int index = 0; index < PRAYER_COUNT; index++)
             {
                 Prayer prayer = Prayer.values()[index];
                 Widget prayerWidget = prayerWidgets.get(prayer.ordinal());
