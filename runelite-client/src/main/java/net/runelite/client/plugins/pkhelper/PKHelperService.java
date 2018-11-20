@@ -57,20 +57,13 @@ public class PKHelperService
             if (player == null || player.getName() == null)
                 continue;
 
-            if (player == localPlayer && config.highlightOwnPlayer())
+            if (player == localPlayer)
             {
-                consumer.accept(player, config.getOwnPlayerColor());
+                if (config.highlightOwnPlayer())
+                    consumer.accept(player, config.getOwnPlayerColor());
+
                 continue;
             }
-
-            int lvlDelta =  player.getCombatLevel() - localPlayer.getCombatLevel();
-            int wildyLvl = getWildernessLevelFrom(player.getWorldLocation());
-
-            if (wildyLvl <= 0)
-                continue;
-
-            if (Math.abs(lvlDelta) > wildyLvl)
-                continue;
 
             if (config.highlightFriends() && (player.isFriend() || player.isClanMember()))
             {
@@ -78,6 +71,15 @@ public class PKHelperService
             }
             else if (player != localPlayer && !player.isFriend() && !player.isClanMember())
             {
+                int lvlDelta =  player.getCombatLevel() - localPlayer.getCombatLevel();
+                int wildyLvl = getWildernessLevelFrom(player.getWorldLocation());
+
+                if (wildyLvl <= 0)
+                    continue;
+
+                if (Math.abs(lvlDelta) > wildyLvl)
+                    continue;
+
                 int R = clamp((int)(((float)(lvlDelta + wildyLvl) / (float)(wildyLvl * 2)) * 255.f), 0, 255);
                 int G = clamp(255 - R, 0, 255);
 
