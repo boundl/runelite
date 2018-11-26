@@ -1,9 +1,11 @@
 package net.runelite.client.protectitemreminder;
 
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Provides;
 import net.runelite.api.*;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -12,7 +14,8 @@ import javax.inject.Inject;
 
 @PluginDescriptor(
         name = "Protect Item Reminder",
-        description = "Reminds brian to protect item when in the wilderness.",
+        description = "Reminds Brian to protect item when in the wilderness.",
+        tags = { "wilderness", "prayer", "protect", "item", "pking" },
         enabledByDefault = false
 )
 public class ProtectItemReminderPlugin extends Plugin
@@ -29,6 +32,12 @@ public class ProtectItemReminderPlugin extends Plugin
     private Player localPlayer = client.getLocalPlayer();
 
     public boolean shouldRemind = false;
+
+    @Provides
+    ProtectItemReminderConfig getConfig(ConfigManager configManager)
+    {
+        return configManager.getConfig(ProtectItemReminderConfig.class);
+    }
 
     @Override
     protected void startUp() throws Exception
