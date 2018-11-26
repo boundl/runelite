@@ -1,4 +1,4 @@
-package net.runelite.client.protectitemreminder;
+package net.runelite.client.plugijns.protectitemreminder;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;

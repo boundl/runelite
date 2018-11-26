@@ -1,4 +1,4 @@
-package net.runelite.client.protectitemreminder;
+package net.runelite.client.plugijns.protectitemreminder;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Provides;
@@ -24,12 +24,12 @@ public class ProtectItemReminderPlugin extends Plugin
     private Client client;
 
     @Inject
-    private ProtectItemReminderOverlay overlay;
-
-    @Inject
     private OverlayManager overlayManager;
 
-    private Player localPlayer = client.getLocalPlayer();
+    @Inject
+    private ProtectItemReminderOverlay overlay;
+
+    private Player localPlayer;
 
     public boolean shouldRemind = false;
 

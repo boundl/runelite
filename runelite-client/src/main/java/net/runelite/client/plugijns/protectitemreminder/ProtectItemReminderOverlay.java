@@ -1,4 +1,4 @@
-package net.runelite.client.protectitemreminder;
+package net.runelite.client.plugijns.protectitemreminder;
 
 import net.runelite.api.Client;
 import net.runelite.client.ui.overlay.Overlay;
