@@ -1,4 +1,4 @@
-package net.runelite.client.plugijns.protectitemreminder;
+package net.runelite.client.plugins.protectitemreminder;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Provides;
@@ -9,6 +9,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
+import net.runelite.api.coords.WorldPoint;
 
 import javax.inject.Inject;
 
@@ -66,10 +67,35 @@ public class ProtectItemReminderPlugin extends Plugin
         }
     }
 
+    int getWildernessLevelFrom(WorldPoint point)
+    {
+        int y = point.getY();               //v underground           //v above ground
+
+        int wildernessLevel = clamp(y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1, 0, 99);
+
+        switch (client.getWorld())
+        {
+            case 337:
+            case 371:
+            case 417:
+            case 392:
+            case 324:
+                wildernessLevel += 15;
+            default: break;
+        }
+
+        return Math.max(0, wildernessLevel);
+    }
+
+    public static int clamp(int val, int min, int max)
+    {
+        return Math.max(min, Math.min(max, val));
+    }
+
     @Subscribe
     public void onGameTick(GameTick event)
     {
-        if (localPlayer == null || localPlayer.getSkullIcon() != SkullIcon.SKULL)
+        if (getWildernessLevelFrom(localPlayer.getWorldLocation()) <= 0)
         {
             shouldRemind = false;
             return;
@@ -77,7 +103,5 @@ public class ProtectItemReminderPlugin extends Plugin
         else
             shouldRemind = true;
     }
-
-
 
 }
