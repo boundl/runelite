@@ -63,7 +63,7 @@ public class NextHitNotifierPlugin extends Plugin
             lastHit = 0;
             showTime = 0;
         }
-        else if (event.getGameState() == GameState.LOGIN_SCREEN)
+        else
         {
             lastHpXp = 0;
             lastHit = 0;
@@ -81,6 +81,14 @@ public class NextHitNotifierPlugin extends Plugin
     @Subscribe
     public void onExperienceChanged(ExperienceChanged event)
     {
+        if (client.getGameState() != GameState.LOGGED_IN)
+        {
+            lastHpXp = 0;
+            lastHit = 0;
+            showTime = 0;
+            return;
+        }
+
         final Skill skill = event.getSkill();
 
         if (skill != Skill.HITPOINTS)
