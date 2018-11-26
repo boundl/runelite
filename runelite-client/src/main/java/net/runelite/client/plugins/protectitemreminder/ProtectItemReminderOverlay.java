@@ -20,11 +20,12 @@ public class ProtectItemReminderOverlay extends Overlay
     private ProtectItemReminderOverlay(Client client, ProtectItemReminderPlugin plugin)
     {
         setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
-        setPosition(OverlayPosition.DETACHED);
-
+        setPreferredPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
+        setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
         this.client = client;
         this.plugin = plugin;
     }
+
     @Override
     public Dimension render(Graphics2D graphics)
     {

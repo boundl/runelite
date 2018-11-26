@@ -30,6 +30,9 @@ public class ProtectItemReminderPlugin extends Plugin
     @Inject
     private ProtectItemReminderOverlay overlay;
 
+    @Inject
+    private ProtectItemReminderConfig config;
+
     private Player localPlayer;
 
     public boolean shouldRemind = false;
@@ -99,7 +102,7 @@ public class ProtectItemReminderPlugin extends Plugin
             shouldRemind = false;
             return;
         }
-        if (localPlayer.getSkullIcon() != SkullIcon.SKULL)
+        if (config.skulledOnly() && localPlayer.getSkullIcon() != SkullIcon.SKULL)
         {
             shouldRemind = false;
             return;
