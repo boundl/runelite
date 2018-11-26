@@ -1,7 +1,6 @@
 package net.runelite.client.plugins.nexthitnotifier;
 
 import net.runelite.api.Client;
-import net.runelite.client.plugins.xpglobes.XpGlobesPlugin;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.PanelComponent;
@@ -18,7 +17,6 @@ public class NextHitNotifierOverlay extends Overlay
 
     private final PanelComponent panelComponent = new PanelComponent();
     private final Dimension panelSize = new Dimension(26, 0);
-    private static final Color NOTIFICATION_COLOR = new Color(255, 0, 255, 255);
 
     @Inject
     private NextHitNotifierOverlay(Client client, NextHitNotifierPlugin plugin, NextHitNotifierConfig config)
