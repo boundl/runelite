@@ -61,10 +61,6 @@ public class ProtectItemReminderPlugin extends Plugin
         {
             localPlayer = client.getLocalPlayer();
         }
-        else
-        {
-            localPlayer = null;
-        }
     }
 
     int getWildernessLevelFrom(WorldPoint point)
@@ -95,13 +91,30 @@ public class ProtectItemReminderPlugin extends Plugin
     @Subscribe
     public void onGameTick(GameTick event)
     {
+        if (client.getGameState() == GameState.LOGIN_SCREEN)
+            return;
+
+        if (localPlayer == null)
+        {
+            shouldRemind = false;
+            return;
+        }
+        if (localPlayer.getSkullIcon() != SkullIcon.SKULL)
+        {
+            shouldRemind = false;
+            return;
+        }
         if (getWildernessLevelFrom(localPlayer.getWorldLocation()) <= 0)
         {
             shouldRemind = false;
             return;
         }
-        else
-            shouldRemind = true;
-    }
 
+        int value = client.getVar(Prayer.PROTECT_ITEM.getVarbit());
+
+        if (value == 0)
+            shouldRemind = true;
+        else
+            shouldRemind = false;
+    }
 }
