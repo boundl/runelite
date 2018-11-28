@@ -2,32 +2,66 @@ package net.runelite.client.plugins.menumodifier;
 
 import com.google.common.eventbus.Subscribe;
 
+import com.google.inject.Provides;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import net.runelite.api.Client;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.Player;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.MenuEntryAdded;
+import net.runelite.client.config.ConfigManager;
+import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.Text;
 
 import javax.inject.Inject;
 import java.util.Arrays;
 
+@PluginDescriptor(
+        name = "Menu Modifier Plugin",
+        description = "Changes right click menu for players",
+        tags = { "menu", "modifier", "right", "click", "pk" }
+)
 public class MenuModifierPlugin extends Plugin
 {
     @Inject
-    Client client;
+    private Client client;
     
     @Inject
     private MenuModifierConfig config;
+
+    @Inject
+    private MenuModifierInputListener inputListener;
+
+    @Inject
+    private KeyManager keyManager;
+
+    @Provides
+    MenuModifierConfig provideConfig(ConfigManager configManager)
+    {
+        return configManager.getConfig(MenuModifierConfig.class);
+    }
     
     @Override
-    protected void startUp() throws Exception {}
+    protected void startUp() throws Exception
+    {
+        keyManager.registerKeyListener(inputListener);
+    }
     
     @Override
-    protected void shutDown() throws Exception {}
+    protected void shutDown() throws Exception
+    {
+        keyManager.unregisterKeyListener(inputListener);
+    }
+
+    @Getter(AccessLevel.PACKAGE)
+    @Setter(AccessLevel.PACKAGE)
+    private boolean hotKeyPressed;
     
     private boolean inWilderness = false;
     
@@ -59,12 +93,24 @@ public class MenuModifierPlugin extends Plugin
     @Subscribe
     public void onMenuEntryAdded(MenuEntryAdded menuEntryAdded)
     {
-        if (!inWilderness)
-            return;
+        /*if (!inWilderness)
+            return;*/
     
         String option = Text.removeTags(menuEntryAdded.getOption()).toLowerCase();
-    
-        if (option != "trade" || option != "lookup")
+
+        if (!option.contains("trade with") || !config.hideTradeWith())
+            return;
+
+        if (!option.contains("lookup") || !config.hideLookup())
+            return;
+
+        if (!option.contains("report") || !config.hideReport())
+            return;
+
+        if (!option.contains("examine") || !config.hideExamine())
+            return;
+
+        if (!option.contains("cancel") || !config.hideCancel())
             return;
         
         int identifier = menuEntryAdded.getIdentifier();
@@ -77,9 +123,17 @@ public class MenuModifierPlugin extends Plugin
     
         if (player == null)
             return;
-        
-        if (player.isClanMember() || player.isFriend())
-            return;
+
+        if (option.contains("attack"))
+        {
+            if (player.isFriend() || (player.isClanMember() && config.hideClanmateIsFriendly()))
+            {
+                if (!config.hideAttackFriendly())
+                    return;
+            }
+            else
+                return;
+        }
         
         MenuEntry[] menuEntries = client.getMenuEntries();
         if (menuEntries.length > 0)
