@@ -95,49 +95,50 @@ public class MenuModifierPlugin extends Plugin
     {
         /*if (!inWilderness)
             return;*/
+
+        if (hotKeyPressed)
+            return;
     
         String option = Text.removeTags(menuEntryAdded.getOption()).toLowerCase();
 
-        if (!option.contains("trade with") || !config.hideTradeWith())
-            return;
-
-        if (!option.contains("lookup") || !config.hideLookup())
-            return;
-
-        if (!option.contains("report") || !config.hideReport())
-            return;
-
-        if (!option.contains("examine") || !config.hideExamine())
-            return;
-
-        if (!option.contains("cancel") || !config.hideCancel())
-            return;
-        
-        int identifier = menuEntryAdded.getIdentifier();
-        
-        Player[] players = client.getCachedPlayers();
-        Player player = null;
-    
-        if (identifier >= 0 && identifier < players.length)
-            player = players[identifier];
-    
-        if (player == null)
-            return;
-
-        if (option.contains("attack"))
+        if ((option.contains("trade with") && config.hideTradeWith())
+            || (option.contains("lookup") && config.hideLookup())
+            || (option.contains("report") && config.hideReport())
+            || (option.contains("examine") && config.hideExamine())
+            || (option.contains("cancel") && config.hideCancel())
+            || (option.contains("attack")))
         {
-            if (player.isFriend() || (player.isClanMember() && config.hideClanmateIsFriendly()))
-            {
-                if (!config.hideAttackFriendly())
-                    return;
-            }
-            else
+
+            int identifier = menuEntryAdded.getIdentifier();
+
+            Player[] players = client.getCachedPlayers();
+            Player player = null;
+
+            if (identifier >= 0 && identifier < players.length)
+                player = players[identifier];
+
+            if (player == null)
                 return;
+
+            //allow trading with friends/clanmates
+            if (option.contains("trade with") && (player.isFriend() || player.isClanMember()))
+                return;
+
+            //this is so ugly it hurts my soul
+            if (option.contains("attack"))
+            {
+                if (config.hideAttackFriendly())
+                {
+                    if (!player.isFriend() && !player.isClanMember())
+                        return;
+                }
+            }
+
+            MenuEntry[] menuEntries = client.getMenuEntries();
+
+            if (menuEntries.length > 0)
+                client.setMenuEntries(Arrays.copyOf(menuEntries, menuEntries.length - 1));
         }
-        
-        MenuEntry[] menuEntries = client.getMenuEntries();
-        if (menuEntries.length > 0)
-            client.setMenuEntries(Arrays.copyOf(menuEntries, menuEntries.length - 1));
     }
     
     @Subscribe

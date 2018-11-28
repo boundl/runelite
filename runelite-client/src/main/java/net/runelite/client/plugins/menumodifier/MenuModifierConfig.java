@@ -24,7 +24,4 @@ public interface MenuModifierConfig extends Config
 
     @ConfigItem(position = 5, keyName = "hideAttackFriendly", name = "Hide Attack on friendly", description = "Hides the 'attack' option from the right click menu for friendly players")
     default boolean hideAttackFriendly() { return true; }
-
-    @ConfigItem(position = 4, keyName = "hideClanmateIsFriendly", name = "Consider clanmates friendly", description = "Should we consider clanmates friendly?")
-    default boolean hideClanmateIsFriendly() { return true; }
 }
