@@ -19,14 +19,14 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.ColorUtil;
+import net.runelite.client.util.MiscUtils;
 import net.runelite.client.util.Text;
 
 @PluginDescriptor(
-        name = "PK Helper Plugin",
+        name = "!PK Helper Plugin",
         description = "Highlight players on-screen and/or on the minimap",
-        tags = {"highlight", "minimap", "overlay", "players", "pk", "helper"}
+        tags = {"highlight", "minimap", "overlay", "players", "pk", "helper", "bogla"}
 )
-
 public class PKHelperPlugin extends Plugin
 {
     @Inject
@@ -69,31 +69,6 @@ public class PKHelperPlugin extends Plugin
         overlayManager.remove(pkHelperMinimapOverlay);
     }
 
-    int getWildernessLevelFrom(WorldPoint point)
-    {
-        int y = point.getY();               //v underground           //v above ground
-
-        int wildernessLevel = clamp(y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1, 0, 99);
-
-        switch (client.getWorld())
-        {
-            case 337:
-            case 371:
-            case 417:
-            case 392:
-            case 324:
-                wildernessLevel += 15;
-            default: break;
-        }
-
-        return Math.max(0, wildernessLevel);
-    }
-
-    public static int clamp(int val, int min, int max)
-    {
-        return Math.max(min, Math.min(max, val));
-    }
-
     @Subscribe
     public void onMenuEntryAdded(MenuEntryAdded menuEntryAdded)
     {
@@ -131,13 +106,13 @@ public class PKHelperPlugin extends Plugin
             else if (!player.isFriend() && !player.isClanMember())
             {
                 int lvlDelta =  player.getCombatLevel() - localPlayer.getCombatLevel();
-                int wildyLvl = getWildernessLevelFrom(player.getWorldLocation());
+                int wildyLvl = MiscUtils.getWildernessLevelFrom(client, player.getWorldLocation());
 
                 if (wildyLvl <= 0)
                     return;
 
-                int R = clamp((int)(((float)(lvlDelta + wildyLvl) / (float)(wildyLvl * 2)) * 255.f), 0, 255);
-                int G = clamp(255 - R, 0, 255);
+                int R = MiscUtils.clamp((int)(((float)(lvlDelta + wildyLvl) / (float)(wildyLvl * 2)) * 255.f), 0, 255);
+                int G = MiscUtils.clamp(255 - R, 0, 255);
 
                 if (Math.abs(lvlDelta) <= wildyLvl)
                     color = Color.getHSBColor(Color.RGBtoHSB(R, G, 0, null)[0], 1.f, 1.f);

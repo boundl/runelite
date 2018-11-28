@@ -10,6 +10,7 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.client.util.MiscUtils;
 
 import javax.inject.Inject;
 
@@ -66,31 +67,6 @@ public class ProtectItemReminderPlugin extends Plugin
         }
     }
 
-    private int getWildernessLevelFrom(WorldPoint point)
-    {
-        int y = point.getY();               //v underground           //v above ground
-
-        int wildernessLevel = clamp(y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1, 0, 99);
-
-        switch (client.getWorld())
-        {
-            case 337:
-            case 371:
-            case 417:
-            case 392:
-            case 324:
-                wildernessLevel += 15;
-            default: break;
-        }
-
-        return Math.max(0, wildernessLevel);
-    }
-
-    private static int clamp(int val, int min, int max)
-    {
-        return Math.max(min, Math.min(max, val));
-    }
-
     @Subscribe
     public void onGameTick(GameTick event)
     {
@@ -107,7 +83,7 @@ public class ProtectItemReminderPlugin extends Plugin
             shouldRemind = false;
             return;
         }
-        if (getWildernessLevelFrom(localPlayer.getWorldLocation()) <= 0)
+        if (MiscUtils.getWildernessLevelFrom(client, localPlayer.getWorldLocation()) <= 0)
         {
             shouldRemind = false;
             return;

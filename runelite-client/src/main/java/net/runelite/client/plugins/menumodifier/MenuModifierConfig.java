@@ -21,7 +21,4 @@ public interface MenuModifierConfig extends Config
 
     @ConfigItem(position = 4, keyName = "hideLookup", name = "Hide Lookup", description = "Hides the 'lookup' option from the right click menu")
     default boolean hideLookup() { return true; }
-
-    @ConfigItem(position = 5, keyName = "hideAttackFriendly", name = "Hide Attack on friendly", description = "Hides the 'attack' option from the right click menu for friendly players")
-    default boolean hideAttackFriendly() { return true; }
 }

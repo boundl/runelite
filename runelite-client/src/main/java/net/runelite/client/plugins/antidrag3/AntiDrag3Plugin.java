@@ -38,9 +38,10 @@ import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.util.MiscUtils;
 
 @PluginDescriptor(
-        name = "Anti Drag",
+        name = "!Anti Drag",
         description = "Prevent dragging an item for a specified delay",
         tags = {"antidrag", "delay", "inventory", "items"}
 )
@@ -63,41 +64,6 @@ public class AntiDrag3Plugin extends Plugin implements KeyListener
         return configManager.getConfig(AntiDrag3Config.class);
     }
 
-    private int getWildernessLevelFrom(WorldPoint point)
-    {
-        int y = point.getY();               //v underground           //v above ground
-
-        int wildernessLevel = clamp(y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1, 0, 99);
-
-        switch (client.getWorld())
-        {
-            case 337:
-            case 371:
-            case 417:
-            case 392:
-            case 324:
-                wildernessLevel += 15;
-            default: break;
-        }
-
-        return Math.max(0, wildernessLevel);
-    }
-
-    private static int clamp(int val, int min, int max)
-    {
-        return Math.max(min, Math.min(max, val));
-    }
-
-    private boolean inWilderness()
-    {
-        Player localPlayer = client.getLocalPlayer();
-
-        if (localPlayer == null)
-            return false;
-
-        return getWildernessLevelFrom(localPlayer.getWorldLocation()) > 0;
-    }
-
     private boolean isInWilderness = false;
 
     @Override
@@ -105,7 +71,7 @@ public class AntiDrag3Plugin extends Plugin implements KeyListener
     {
         keyManager.registerKeyListener(this);
 
-        if (inWilderness())
+        if (MiscUtils.inWilderness(client))
             client.setInventoryDragDelay(config.dragDelay());
         else
             client.setInventoryDragDelay(DEFAULT_DELAY);
@@ -121,11 +87,11 @@ public class AntiDrag3Plugin extends Plugin implements KeyListener
     @Subscribe
     public void onGameTick(GameTick event)
     {
-        boolean inWild = inWilderness();
+        boolean inWild = MiscUtils.inWilderness(client);
 
         if (inWild != isInWilderness)
         {
-            if (inWilderness())
+            if (MiscUtils.inWilderness(client))
                 client.setInventoryDragDelay(config.dragDelay());
             else
                 client.setInventoryDragDelay(DEFAULT_DELAY);
@@ -135,14 +101,12 @@ public class AntiDrag3Plugin extends Plugin implements KeyListener
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
+    public void keyTyped(KeyEvent e) { }
 
     @Override
     public void keyPressed(KeyEvent e)
     {
-        if (!inWilderness())
+        if (!MiscUtils.inWilderness(client))
             return;
 
         if (e.getKeyCode() == KeyEvent.VK_SHIFT)
@@ -154,7 +118,7 @@ public class AntiDrag3Plugin extends Plugin implements KeyListener
     @Override
     public void keyReleased(KeyEvent e)
     {
-        if (!inWilderness())
+        if (!MiscUtils.inWilderness(client))
             return;
 
         if (e.getKeyCode() == KeyEvent.VK_SHIFT)
@@ -166,7 +130,7 @@ public class AntiDrag3Plugin extends Plugin implements KeyListener
     @Subscribe
     public void onFocusChanged(FocusChanged focusChanged)
     {
-        if (!inWilderness())
+        if (!MiscUtils.inWilderness(client))
             return;
 
         if (!focusChanged.isFocused())

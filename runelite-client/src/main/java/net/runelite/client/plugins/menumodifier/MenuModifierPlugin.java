@@ -17,15 +17,16 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.util.ColorUtil;
+import net.runelite.client.util.MiscUtils;
 import net.runelite.client.util.Text;
 
 import javax.inject.Inject;
 import java.util.Arrays;
 
 @PluginDescriptor(
-        name = "Menu Modifier Plugin",
+        name = "!Menu Modifier Plugin",
         description = "Changes right click menu for players",
-        tags = { "menu", "modifier", "right", "click", "pk" }
+        tags = { "menu", "modifier", "right", "click", "pk", "bogla" }
 )
 public class MenuModifierPlugin extends Plugin
 {
@@ -65,36 +66,11 @@ public class MenuModifierPlugin extends Plugin
     
     private boolean inWilderness = false;
     
-    int getWildernessLevelFrom(WorldPoint point)
-    {
-        int y = point.getY();               //v underground           //v above ground
-        
-        int wildernessLevel = clamp(y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1, 0, 99);
-        
-        switch (client.getWorld())
-        {
-            case 337:
-            case 371:
-            case 417:
-            case 392:
-            case 324:
-                wildernessLevel += 15;
-            default: break;
-        }
-        
-        return Math.max(0, wildernessLevel);
-    }
-    
-    public static int clamp(int val, int min, int max)
-    {
-        return Math.max(min, Math.min(max, val));
-    }
-    
     @Subscribe
     public void onMenuEntryAdded(MenuEntryAdded menuEntryAdded)
     {
-        /*if (!inWilderness)
-            return;*/
+        if (!inWilderness)
+            return;
 
         if (hotKeyPressed)
             return;
@@ -105,10 +81,8 @@ public class MenuModifierPlugin extends Plugin
             || (option.contains("lookup") && config.hideLookup())
             || (option.contains("report") && config.hideReport())
             || (option.contains("examine") && config.hideExamine())
-            || (option.contains("cancel") && config.hideCancel())
-            || (option.contains("attack")))
+            || (option.contains("cancel") && config.hideCancel()))
         {
-
             int identifier = menuEntryAdded.getIdentifier();
 
             Player[] players = client.getCachedPlayers();
@@ -123,16 +97,6 @@ public class MenuModifierPlugin extends Plugin
             //allow trading with friends/clanmates
             if (option.contains("trade with") && (player.isFriend() || player.isClanMember()))
                 return;
-
-            //this is so ugly it hurts my soul
-            if (option.contains("attack"))
-            {
-                if (config.hideAttackFriendly())
-                {
-                    if (!player.isFriend() && !player.isClanMember())
-                        return;
-                }
-            }
 
             MenuEntry[] menuEntries = client.getMenuEntries();
 
@@ -149,6 +113,6 @@ public class MenuModifierPlugin extends Plugin
         if (localPlayer == null)
             return;
         
-        inWilderness = getWildernessLevelFrom(localPlayer.getWorldLocation()) > 0;
+        inWilderness = MiscUtils.getWildernessLevelFrom(client, localPlayer.getWorldLocation()) > 0;
     }
 }
