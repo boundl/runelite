@@ -9,14 +9,12 @@ import lombok.Setter;
 import net.runelite.api.Client;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.Player;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.MiscUtils;
 import net.runelite.client.util.Text;
 
