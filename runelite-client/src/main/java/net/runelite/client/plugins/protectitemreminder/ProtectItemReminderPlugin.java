@@ -15,7 +15,7 @@ import net.runelite.client.util.MiscUtils;
 import javax.inject.Inject;
 
 @PluginDescriptor(
-        name = "Protect Item Reminder",
+        name = "!Protect Item Reminder",
         description = "Reminds Brian to protect item when in the wilderness.",
         tags = { "wilderness", "prayer", "protect", "item", "pking" },
         enabledByDefault = false
