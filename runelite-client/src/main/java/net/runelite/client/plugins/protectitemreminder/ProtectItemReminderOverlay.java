@@ -1,8 +1,11 @@
 package net.runelite.client.plugins.protectitemreminder;
 
 import net.runelite.api.Client;
+import net.runelite.api.Player;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
+import net.runelite.client.ui.overlay.OverlayPriority;
+import net.runelite.client.ui.overlay.OverlayUtil;
 import net.runelite.client.ui.overlay.components.PanelComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 
@@ -13,30 +16,36 @@ public class ProtectItemReminderOverlay extends Overlay
 {
     private final Client client;
     private final ProtectItemReminderPlugin plugin;
+    private final ProtectItemReminderConfig config;
 
-    private final PanelComponent panelComponent = new PanelComponent();
+    private final String protItemString = "ENABLE PROTECT ITEM";
 
     @Inject
-    private ProtectItemReminderOverlay(Client client, ProtectItemReminderPlugin plugin)
+    private ProtectItemReminderOverlay(Client client, ProtectItemReminderPlugin plugin, ProtectItemReminderConfig config)
     {
-        setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
-        setPreferredPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
-        setPosition(OverlayPosition.ABOVE_CHATBOX_RIGHT);
+        setPosition(OverlayPosition.DYNAMIC);
+        setPriority(OverlayPriority.HIGHEST);
         this.client = client;
         this.plugin = plugin;
+        this.config = config;
     }
 
     @Override
     public Dimension render(Graphics2D graphics)
     {
-        panelComponent.getChildren().clear();
-
         if (!plugin.shouldRemind)
             return null;
 
-        panelComponent.getChildren().add(TitleComponent.builder().text("ENABLE PROTECT ITEM").color(Color.RED).build());
-        panelComponent.setPreferredSize(new Dimension(graphics.getFontMetrics().stringWidth("ENABLE PROTECT ITEM") + 10, 0));
+        Player localPlayer = client.getLocalPlayer();
 
-        return panelComponent.render(graphics);
+        if (localPlayer == null)
+            return null;
+
+        net.runelite.api.Point drawPos = localPlayer.getCanvasTextLocation(graphics, protItemString, localPlayer.getLogicalHeight() + config.getHeight());
+
+        if (drawPos != null)
+            OverlayUtil.renderTextLocation(graphics, drawPos, protItemString, Color.RED);
+
+        return null;
     }
 }
