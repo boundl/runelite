@@ -66,7 +66,7 @@ public class ProtectItemReminderPlugin extends Plugin
         }
     }
 
-    int getWildernessLevelFrom(WorldPoint point)
+    private int getWildernessLevelFrom(WorldPoint point)
     {
         int y = point.getY();               //v underground           //v above ground
 
@@ -86,7 +86,7 @@ public class ProtectItemReminderPlugin extends Plugin
         return Math.max(0, wildernessLevel);
     }
 
-    public static int clamp(int val, int min, int max)
+    private static int clamp(int val, int min, int max)
     {
         return Math.max(min, Math.min(max, val));
     }
