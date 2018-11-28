@@ -539,7 +539,8 @@ public class TimersPlugin extends Plugin
 		if (freezeTimer != null)
 		{
 			// assume movement means unfrozen
-			if (!currentWorldPoint.equals(lastPoint))
+			if (freezeTime != client.getTickCount()
+				&& !currentWorldPoint.equals(lastPoint))
 			{
 				removeGameTimer(freezeTimer.getTimer());
 				freezeTimer = null;
