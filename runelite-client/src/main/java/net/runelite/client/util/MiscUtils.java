@@ -2,26 +2,26 @@ package net.runelite.client.util;
 
 import net.runelite.api.Client;
 import net.runelite.api.Player;
+import net.runelite.api.WorldType;
 import net.runelite.api.coords.WorldPoint;
 
 public class MiscUtils
 {
     public static int getWildernessLevelFrom(Client client, WorldPoint point)
     {
+        if (client == null)
+            return 0;
+
+        if (point == null)
+            return 0;
+
         int y = point.getY();               //v underground           //v above ground
 
         int wildernessLevel = clamp(y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1, 0, 99);
 
-        switch (client.getWorld())
+        if (client.getWorldType().stream().anyMatch(x -> x == WorldType.PVP || x == WorldType.PVP_HIGH_RISK))
         {
-            case 417:
-            case 392:
-            case 345:
-            case 343:
-            case 324:
-                wildernessLevel += 15;
-            default:
-                break;
+            wildernessLevel += 15;
         }
 
         return Math.max(0, wildernessLevel);
