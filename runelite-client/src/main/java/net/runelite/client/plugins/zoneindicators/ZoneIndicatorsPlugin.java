@@ -52,9 +52,9 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
-        name = "Zone Indicators",
+        name = "!Zone Indicators",
         description = "Show borders of multicombat and PvP safezones",
-        tags = {"multicombat", "lines", "pvp", "deadman", "safezones"}
+        tags = {"multicombat", "lines", "pvp", "deadman", "safezones", "bogla"}
 )
 public class ZoneIndicatorsPlugin extends Plugin
 {

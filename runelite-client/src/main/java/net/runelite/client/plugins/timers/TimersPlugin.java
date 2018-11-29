@@ -49,18 +49,7 @@ import net.runelite.api.Prayer;
 import net.runelite.api.Varbits;
 import net.runelite.api.WorldType;
 import net.runelite.api.coords.WorldPoint;
-import net.runelite.api.events.AnimationChanged;
-import net.runelite.api.events.ChatMessage;
-import net.runelite.api.events.ConfigChanged;
-import net.runelite.api.events.GameStateChanged;
-import net.runelite.api.events.GameTick;
-import net.runelite.api.events.GraphicChanged;
-import net.runelite.api.events.ItemContainerChanged;
-import net.runelite.api.events.LocalPlayerDeath;
-import net.runelite.api.events.MenuOptionClicked;
-import net.runelite.api.events.NpcDespawned;
-import net.runelite.api.events.VarbitChanged;
-import net.runelite.api.events.WidgetHiddenChanged;
+import net.runelite.api.events.*;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import static net.runelite.api.widgets.WidgetInfo.PVP_WORLD_SAFE_ZONE;
@@ -142,6 +131,12 @@ public class TimersPlugin extends Plugin
 	@Inject
 	private FreezeBarOverlay barOverlay;
 
+	@Inject
+	private FreezeManager freezeManager;
+
+	@Inject
+	private FreezeOverlay freezeOverlay;
+
 	@Provides
 	TimersConfig getConfig(ConfigManager configManager)
 	{
@@ -152,6 +147,7 @@ public class TimersPlugin extends Plugin
 	protected void startUp()
 	{
 		overlayManager.add(barOverlay);
+		overlayManager.add(freezeOverlay);
 	}
 
 	@Override
@@ -166,6 +162,7 @@ public class TimersPlugin extends Plugin
 		widgetHiddenChangedOnPvpWorld = false;
 
 		overlayManager.remove(barOverlay);
+		overlayManager.remove(freezeOverlay);
 	}
 
 	@Subscribe
@@ -193,6 +190,17 @@ public class TimersPlugin extends Plugin
 			}
 
 			lastWildernessVarb = inWilderness;
+		}
+	}
+
+	@Subscribe
+	public void onPlayerDespawned(PlayerDespawned playerDespawned)
+	{
+		final Player player = playerDespawned.getPlayer();
+		// All despawns ok: death, teleports, log out, runs away from screen
+		if (config.showFreezes())
+		{
+			freezeManager.remove(player);
 		}
 	}
 
@@ -554,6 +562,8 @@ public class TimersPlugin extends Plugin
 
 		lastPoint = currentWorldPoint;
 
+		freezeManager.prune();
+
 		if (!widgetHiddenChangedOnPvpWorld)
 		{
 			return;
@@ -651,6 +661,62 @@ public class TimersPlugin extends Plugin
 	public void onGraphicChanged(GraphicChanged event)
 	{
 		Actor actor = event.getActor();
+
+		if (config.showFreezes())
+		{
+			if (actor.getGraphic() == BIND.getGraphicId())
+			{
+				if (client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC)
+						&& !client.getWorldType().contains(WorldType.SEASONAL_DEADMAN))
+				{
+					freezeManager.put(actor, HALFBIND);
+				}
+				else
+				{
+					freezeManager.put(actor, BIND);
+				}
+			}
+			if (actor.getGraphic() == SNARE.getGraphicId())
+			{
+				if (client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC)
+						&& !client.getWorldType().contains(WorldType.SEASONAL_DEADMAN))
+				{
+					freezeManager.put(actor, HALFSNARE);
+				}
+				else
+				{
+					freezeManager.put(actor, SNARE);
+				}
+			}
+			if (actor.getGraphic() == ENTANGLE.getGraphicId())
+			{
+				if (client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC)
+						&& !client.getWorldType().contains(WorldType.SEASONAL_DEADMAN))
+				{
+					freezeManager.put(actor, HALFENTANGLE);
+				}
+				else
+				{
+					freezeManager.put(actor, ENTANGLE);
+				}
+			}
+			if (actor.getGraphic() == ICERUSH.getGraphicId())
+			{
+				freezeManager.put(actor, ICERUSH);
+			}
+			if (actor.getGraphic() == ICEBURST.getGraphicId())
+			{
+				freezeManager.put(actor, ICEBURST);
+			}
+			if (actor.getGraphic() == ICEBLITZ.getGraphicId())
+			{
+				freezeManager.put(actor, ICEBLITZ);
+			}
+			if (actor.getGraphic() == ICEBARRAGE.getGraphicId())
+			{
+				freezeManager.put(actor, ICEBARRAGE);
+			}
+		}
 
 		if (actor != client.getLocalPlayer())
 		{
