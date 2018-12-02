@@ -47,9 +47,12 @@ class FreezeBarOverlay extends Overlay
         if (!config.showFreezeBar() || plugin.freezeTimer == null)
             return null;
 
+        if (true)
+            return null;
+
         final int start_tick = plugin.freezeTime;
         final int current_tick = client.getTickCount();
-        final int duration_ticks = (int)(plugin.freezeTimer.getTimer().getDuration().getSeconds() / 0.6);
+        final int duration_ticks = (int)(plugin.freezeTimer.getTimer().getDuration().getSeconds() / 0.6) + 1;
         final int spent_ticks = current_tick - start_tick;
 
         ratio = 1.0f - ((float)spent_ticks / (float)duration_ticks);

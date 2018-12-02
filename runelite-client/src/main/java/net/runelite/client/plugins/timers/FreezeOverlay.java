@@ -4,11 +4,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+
+import net.runelite.api.Perspective;
 import net.runelite.api.Point;
 //import java.awt.image.BufferedImage;
 import java.awt.Image;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.ui.overlay.Overlay;
@@ -34,10 +38,17 @@ public class FreezeOverlay extends Overlay
     @Inject
     private ItemManager itemManager;
 
+    TimersConfig config;
+
+    private static final Color BAR_FILL_COLOR = new Color(179, 224, 255);
+    private static final Color BAR_BG_COLOR = Color.black;
+    private static final Dimension FREEZE_BAR_SIZE = new Dimension(30, 2);
+
     @Inject
-    private FreezeOverlay(FreezeManager freezeManager)
+    private FreezeOverlay(FreezeManager freezeManager, TimersConfig config)
     {
         this.freezeManager = freezeManager;
+        this.config = config;
 
         setPosition(OverlayPosition.DYNAMIC);
         setLayer(OverlayLayer.ABOVE_WIDGETS);
@@ -59,6 +70,9 @@ public class FreezeOverlay extends Overlay
             BufferedImage freezeImage = info.getGameTimer().getImage(itemManager, spriteManager);
             Point imageLocation = actor.getCanvasImageLocation(freezeImage, offset);
 
+            int barOffset = actor.getLogicalHeight() + 10;
+            Point barLocation = actor.getCanvasTextLocation(graphics, "frozen", barOffset);
+
             if (imageLocation != null)
             {
                 // Render image
@@ -69,6 +83,25 @@ public class FreezeOverlay extends Overlay
                 textComponent.setText(info.getTimer().getText());
                 textComponent.setPosition(new java.awt.Point(imageLocation.getX(), imageLocation.getY()));
                 textComponent.render(graphics);
+            }
+
+            if (barLocation != null)
+            {
+                float ratio = info.getTimer().getTimer().getDuration().getSeconds() / 20.f;
+
+                // Draw bar
+                final int barX = barLocation.getX() - 15;
+                final int barY = barLocation.getY() - config.freezeBarHeight() + 15;
+                final int barWidth = FREEZE_BAR_SIZE.width;
+                final int barHeight = FREEZE_BAR_SIZE.height;
+
+                //Restricted by the width to prevent the bar from being too long
+                final int progressFill = (int)Math.ceil(Math.min((barWidth * ratio), barWidth));
+
+                graphics.setColor(BAR_BG_COLOR);
+                graphics.fillRect(barX, barY, barWidth, barHeight);
+                graphics.setColor(BAR_FILL_COLOR);
+                graphics.fillRect(barX, barY, progressFill, barHeight);
             }
         }
         return null;
