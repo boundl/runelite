@@ -87,7 +87,7 @@ public class FreezeOverlay extends Overlay
 
             if (barLocation != null)
             {
-                float ratio = info.getTimer().getTimer().getDuration().getSeconds() / 20.f;
+                float ratio = 1.0f - (info.getTimer().getTimer().getDuration().getSeconds() / 20.f);
 
                 // Draw bar
                 final int barX = barLocation.getX() - 15;
