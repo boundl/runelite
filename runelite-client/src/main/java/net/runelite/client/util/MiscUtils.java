@@ -15,10 +15,13 @@ public class MiscUtils
         if (point == null)
             return 0;
 
-        int y = point.getY();               //v underground           //v above ground
-
-        int wildernessLevel = clamp(y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1, 0, 99);
-
+        int y = point.getY();
+                                                //v underground        //v above ground
+        int wildernessLevel = y > 6400 ? ((y - 9920) / 8) + 1 : ((y - 3520) / 8) + 1;
+        
+        if (wildernessLevel > 56 || wildernessLevel < 0)
+            wildernessLevel = 0;
+        
         if (client.getWorldType().stream().anyMatch(x -> x == WorldType.PVP || x == WorldType.PVP_HIGH_RISK))
         {
             wildernessLevel += 15;
