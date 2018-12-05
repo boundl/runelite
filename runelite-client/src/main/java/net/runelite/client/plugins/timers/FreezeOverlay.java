@@ -70,8 +70,8 @@ public class FreezeOverlay extends Overlay
             BufferedImage freezeImage = info.getGameTimer().getImage(itemManager, spriteManager);
             Point imageLocation = actor.getCanvasImageLocation(freezeImage, offset);
 
-            int barOffset = actor.getLogicalHeight() + 10;
-            Point barLocation = actor.getCanvasTextLocation(graphics, "frozen", barOffset);
+            //int barOffset = actor.getLogicalHeight() + 10;
+            //Point barLocation = actor.getCanvasTextLocation(graphics, "frozen", barOffset);
 
             if (imageLocation != null)
             {
@@ -85,9 +85,9 @@ public class FreezeOverlay extends Overlay
                 textComponent.render(graphics);
             }
 
-            if (barLocation != null)
+            /*if (barLocation != null)
             {
-                float ratio = 1.0f - (info.getTimer().getTimer().getDuration().getSeconds() / 20.f);
+                float ratio = ((float)info.getTimer().getTimer().getDuration().getSeconds() / 20.f);
 
                 // Draw bar
                 final int barX = barLocation.getX() - 15;
@@ -102,7 +102,7 @@ public class FreezeOverlay extends Overlay
                 graphics.fillRect(barX, barY, barWidth, barHeight);
                 graphics.setColor(BAR_FILL_COLOR);
                 graphics.fillRect(barX, barY, progressFill, barHeight);
-            }
+            }*/
         }
         return null;
 
