@@ -5,8 +5,8 @@ import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
-@ConfigGroup("pkhelper")
-public interface PKHelperConfig extends Config
+@ConfigGroup("pkvision")
+public interface PKVisionConfig extends Config
 {
     @ConfigItem(position = 0, keyName = "drawOwnName", name = "Highlight own player", description = "Configures whether or not your own player should be highlighted")
     default boolean highlightOwnPlayer()
@@ -47,9 +47,9 @@ public interface PKHelperConfig extends Config
         return true;
     }
 
-    @ConfigItem(position = 7, keyName = "drawPlayerHealth", name = "Draw health above players", description = "Configures whether or not player levels should be drawn above players")
-    default boolean drawPlayerHealth()
-    {
-        return true;
-    }
+    //@ConfigItem(position = 7, keyName = "drawPlayerHealth", name = "Draw health above players", description = "Configures whether or not player levels should be drawn above players")
+    //default boolean drawPlayerHealth()
+    //{
+    //    return true;
+    //}
 }

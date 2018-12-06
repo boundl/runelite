@@ -22,15 +22,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.antidrag3;
+package net.runelite.client.plugins.bdrensantidrag;
 
-import com.google.common.eventbus.Subscribe;
+import net.runelite.client.eventbus.Subscribe;
 import com.google.inject.Provides;
 import java.awt.event.KeyEvent;
 import javax.inject.Inject;
 import net.runelite.api.Client;
-import net.runelite.api.Player;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.FocusChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
@@ -41,11 +39,12 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.util.MiscUtils;
 
 @PluginDescriptor(
-        name = "!Anti Drag",
+        name = "!Bdren's Anti Drag",
         description = "Prevent dragging an item for a specified delay",
-        tags = {"antidrag", "delay", "inventory", "items"}
+        tags = {"antidrag", "delay", "inventory", "items"},
+        enabledByDefault = false
 )
-public class AntiDrag3Plugin extends Plugin implements KeyListener
+public class BdrensAntiDragPlugin extends Plugin implements KeyListener
 {
     private static final int DEFAULT_DELAY = 5;
 
@@ -53,15 +52,15 @@ public class AntiDrag3Plugin extends Plugin implements KeyListener
     private Client client;
 
     @Inject
-    private AntiDrag3Config config;
+    private BdrensAntiDragConfig config;
 
     @Inject
     private KeyManager keyManager;
 
     @Provides
-    AntiDrag3Config getConfig(ConfigManager configManager)
+    BdrensAntiDragConfig getConfig(ConfigManager configManager)
     {
-        return configManager.getConfig(AntiDrag3Config.class);
+        return configManager.getConfig(BdrensAntiDragConfig.class);
     }
 
     private boolean isInWilderness = false;

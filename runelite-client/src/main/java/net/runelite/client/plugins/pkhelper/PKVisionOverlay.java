@@ -3,11 +3,9 @@ package net.runelite.client.plugins.pkhelper;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import net.runelite.api.Actor;
 import net.runelite.api.Player;
 import net.runelite.api.Point;
 import net.runelite.client.ui.overlay.Overlay;
@@ -16,16 +14,16 @@ import net.runelite.client.ui.overlay.OverlayPriority;
 import net.runelite.client.ui.overlay.OverlayUtil;
 
 @Singleton
-public class PKHelperOverlay extends Overlay
+public class PKVisionOverlay extends Overlay
 {
-    private final PKHelperService pkHelperService;
-    private final PKHelperConfig config;
+    private final PKVisionService pkVisionService;
+    private final PKVisionConfig config;
 
     @Inject
-    private PKHelperOverlay(PKHelperConfig config, PKHelperService pkHelperService, PKHelperPlugin pkHelperPlugin)
+    private PKVisionOverlay(PKVisionConfig config, PKVisionService pkVisionService, PKVisionPlugin pkVisionPlugin)
     {
         this.config = config;
-        this.pkHelperService = pkHelperService;
+        this.pkVisionService = pkVisionService;
         setPosition(OverlayPosition.DYNAMIC);
         setPriority(OverlayPriority.MED);
     }
@@ -33,7 +31,7 @@ public class PKHelperOverlay extends Overlay
     @Override
     public Dimension render(Graphics2D graphics)
     {
-        pkHelperService.forEachPlayer((player, color) -> renderPlayerOverlay(graphics, player, color));
+        pkVisionService.forEachPlayer((player, color) -> renderPlayerOverlay(graphics, player, color));
         return null;
     }
 

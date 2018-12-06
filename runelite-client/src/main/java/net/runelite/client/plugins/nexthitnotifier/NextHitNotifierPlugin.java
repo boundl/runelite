@@ -1,6 +1,6 @@
 package net.runelite.client.plugins.nexthitnotifier;
 
-import com.google.common.eventbus.Subscribe;
+import net.runelite.client.eventbus.Subscribe;
 import com.google.inject.Provides;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;

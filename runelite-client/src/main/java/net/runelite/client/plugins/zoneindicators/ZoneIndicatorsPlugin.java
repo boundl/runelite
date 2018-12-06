@@ -24,7 +24,7 @@
  */
 package net.runelite.client.plugins.zoneindicators;
 
-import com.google.common.eventbus.Subscribe;
+import net.runelite.client.eventbus.Subscribe;
 import com.google.inject.Provides;
 import java.awt.Rectangle;
 import java.awt.geom.GeneralPath;

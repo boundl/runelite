@@ -13,14 +13,14 @@ import net.runelite.client.ui.overlay.OverlayPriority;
 import net.runelite.client.ui.overlay.OverlayUtil;
 
 @Singleton
-public class PKHelperMinimapOverlay extends Overlay
+public class PKVisionMinimapOverlay extends Overlay
 {
-    private final PKHelperService pkHelperService;
+    private final PKVisionService pkVisionService;
 
     @Inject
-    private PKHelperMinimapOverlay(PKHelperService pkHelperService)
+    private PKVisionMinimapOverlay(PKVisionService pkVisionService)
     {
-        this.pkHelperService = pkHelperService;
+        this.pkVisionService = pkVisionService;
         setLayer(OverlayLayer.ABOVE_WIDGETS);
         setPosition(OverlayPosition.DYNAMIC);
         setPriority(OverlayPriority.HIGH);
@@ -29,7 +29,7 @@ public class PKHelperMinimapOverlay extends Overlay
     @Override
     public Dimension render(Graphics2D graphics)
     {
-        pkHelperService.forEachPlayer((player, color) -> renderPlayerOverlay(graphics, player, color));
+        pkVisionService.forEachPlayer((player, color) -> renderPlayerOverlay(graphics, player, color));
         return null;
 }
 

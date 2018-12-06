@@ -10,16 +10,16 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
 import net.runelite.client.ui.overlay.OverlayUtil;
 
-public class PKHelperTileOverlay extends Overlay
+public class PKVisionTileOverlay extends Overlay
 {
-    private final PKHelperService pkHelperService;
-    private final PKHelperConfig config;
+    private final PKVisionService pkVisionService;
+    private final PKVisionConfig config;
 
     @Inject
-    private PKHelperTileOverlay(PKHelperConfig config, PKHelperService pkHelperService)
+    private PKVisionTileOverlay(PKVisionConfig config, PKVisionService pkVisionService)
     {
         this.config = config;
-        this.pkHelperService = pkHelperService;
+        this.pkVisionService = pkVisionService;
         setLayer(OverlayLayer.ABOVE_SCENE);
         setPosition(OverlayPosition.DYNAMIC);
         setPriority(OverlayPriority.MED);
@@ -31,7 +31,7 @@ public class PKHelperTileOverlay extends Overlay
         if (!config.drawTiles())
             return null;
 
-        pkHelperService.forEachPlayer((player, color) ->
+        pkVisionService.forEachPlayer((player, color) ->
         {
             final Polygon poly = player.getCanvasTilePoly();
 

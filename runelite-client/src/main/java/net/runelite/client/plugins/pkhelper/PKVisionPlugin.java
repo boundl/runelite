@@ -1,19 +1,14 @@
 package net.runelite.client.plugins.pkhelper;
 
-import com.google.common.eventbus.Subscribe;
+import net.runelite.client.eventbus.Subscribe;
 import com.google.inject.Provides;
 import java.awt.Color;
 import javax.inject.Inject;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import static net.runelite.api.MenuAction.*;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.Player;
 import net.runelite.api.events.MenuEntryAdded;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -23,50 +18,50 @@ import net.runelite.client.util.MiscUtils;
 import net.runelite.client.util.Text;
 
 @PluginDescriptor(
-        name = "!PK Helper Plugin",
+        name = "!PK Vision Plugin",
         description = "Highlight players on-screen and/or on the minimap",
-        tags = {"highlight", "minimap", "overlay", "players", "pk", "helper", "bogla"}
+        tags = {"highlight", "minimap", "overlay", "players", "pk", "helper", "vision", "bogla"}
 )
-public class PKHelperPlugin extends Plugin
+public class PKVisionPlugin extends Plugin
 {
     @Inject
     private OverlayManager overlayManager;
 
     @Inject
-    private PKHelperConfig config;
+    private PKVisionConfig config;
 
     @Inject
-    private PKHelperOverlay pkHelperOverlay;
+    private PKVisionOverlay pkVisionOverlay;
 
     @Inject
-    private PKHelperTileOverlay pkHelperTileOverlay;
+    private PKVisionTileOverlay pkVisionTileOverlay;
 
     @Inject
-    private PKHelperMinimapOverlay pkHelperMinimapOverlay;
+    private PKVisionMinimapOverlay pkVisionMinimapOverlay;
 
     @Inject
     private Client client;
 
     @Provides
-    PKHelperConfig provideConfig(ConfigManager configManager)
+    PKVisionConfig provideConfig(ConfigManager configManager)
     {
-        return configManager.getConfig(PKHelperConfig.class);
+        return configManager.getConfig(PKVisionConfig.class);
     }
 
     @Override
     protected void startUp() throws Exception
     {
-        overlayManager.add(pkHelperOverlay);
-        overlayManager.add(pkHelperTileOverlay);
-        overlayManager.add(pkHelperMinimapOverlay);
+        overlayManager.add(pkVisionOverlay);
+        overlayManager.add(pkVisionTileOverlay);
+        overlayManager.add(pkVisionMinimapOverlay);
     }
 
     @Override
     protected void shutDown() throws Exception
     {
-        overlayManager.remove(pkHelperOverlay);
-        overlayManager.remove(pkHelperTileOverlay);
-        overlayManager.remove(pkHelperMinimapOverlay);
+        overlayManager.remove(pkVisionOverlay);
+        overlayManager.remove(pkVisionTileOverlay);
+        overlayManager.remove(pkVisionMinimapOverlay);
     }
 
     @Subscribe
