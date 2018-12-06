@@ -43,13 +43,13 @@ public class NextHitNotifierOverlay extends Overlay
             lastHitText = "";
             lastHit = 0;
         }
-
-        int r = (int)Math.min(Math.floor(lastHit / 50) * 255, 255);
-        int g = 255 - r;
+        
+        int g = (int)Math.min(Math.floor(lastHit / 30.f) * 255.f, 255.f);;
+        int r = 255 - g;
 
         Color textColor = Color.getHSBColor(Color.RGBtoHSB(r, g, 0, null)[0], 1.f, 1.f);
 
-        panelComponent.getChildren().add(TitleComponent.builder().text(lastHitText).color(textColor).build());
+        panelComponent.getChildren().add(TitleComponent.builder().text("Next hit: " + lastHitText).color(textColor).build());
 
         return panelComponent.render(graphics);
     }

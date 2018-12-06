@@ -33,8 +33,8 @@ public class NextHitNotifierPlugin extends Plugin
     private NextHitNotifierOverlay overlay;
 
     private int lastHpXp = 0;
-    public int lastHit = 0;
-    public int showTime = 0;
+    int lastHit = 0;
+    int showTime = 0;
 
     @Provides
     NextHitNotifierConfig getConfig(ConfigManager configManager)
@@ -102,7 +102,7 @@ public class NextHitNotifierPlugin extends Plugin
         if (gainedXp > 1000)
             return;
 
-        lastHit = (int)(gainedXp / 1.33f);
+        lastHit = (int)Math.ceil(gainedXp / 1.33f);
         lastHpXp = currentXp;
         showTime = 3;
     }

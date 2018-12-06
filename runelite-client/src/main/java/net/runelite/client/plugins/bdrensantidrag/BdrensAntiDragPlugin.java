@@ -36,6 +36,7 @@ import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.util.HotkeyListener;
 import net.runelite.client.util.MiscUtils;
 
 @PluginDescriptor(
@@ -82,6 +83,15 @@ public class BdrensAntiDragPlugin extends Plugin implements KeyListener
         client.setInventoryDragDelay(DEFAULT_DELAY);
         keyManager.unregisterKeyListener(this);
     }
+    
+    /*private final HotkeyListener nextKeyListener = new HotkeyListener(() -> config.nextKey())
+    {
+        @Override
+        public void hotkeyPressed()
+        {
+            hop(false);
+        }
+    };*/
 
     @Subscribe
     public void onGameTick(GameTick event)
@@ -108,7 +118,7 @@ public class BdrensAntiDragPlugin extends Plugin implements KeyListener
         if (!MiscUtils.inWilderness(client))
             return;
 
-        if (e.getKeyCode() == KeyEvent.VK_SHIFT)
+        if (e.getKeyCode() == KeyEvent.VK_ALT)
         {
             client.setInventoryDragDelay(DEFAULT_DELAY);
         }
@@ -120,7 +130,7 @@ public class BdrensAntiDragPlugin extends Plugin implements KeyListener
         if (!MiscUtils.inWilderness(client))
             return;
 
-        if (e.getKeyCode() == KeyEvent.VK_SHIFT)
+        if (e.getKeyCode() == KeyEvent.VK_ALT)
         {
             client.setInventoryDragDelay(config.dragDelay());
         }
