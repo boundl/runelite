@@ -1,11 +1,11 @@
-package net.runelite.client.plugins.antidrag3;
+package net.runelite.client.plugins.bdrensantidrag;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
 @ConfigGroup("antiDrag3")
-public interface AntiDrag3Config extends Config
+public interface BdrensAntiDragConfig extends Config
 {
     @ConfigItem(
             keyName = "dragDelay",

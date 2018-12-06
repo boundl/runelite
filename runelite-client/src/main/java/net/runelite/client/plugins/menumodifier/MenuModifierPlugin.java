@@ -1,7 +1,6 @@
 package net.runelite.client.plugins.menumodifier;
 
-import com.google.common.eventbus.Subscribe;
-
+import net.runelite.client.eventbus.Subscribe;
 import com.google.inject.Provides;
 import lombok.AccessLevel;
 import lombok.Getter;

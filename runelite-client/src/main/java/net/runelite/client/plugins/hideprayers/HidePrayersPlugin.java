@@ -1,7 +1,7 @@
 package net.runelite.client.plugins.hideprayers;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.eventbus.Subscribe;
+import net.runelite.client.eventbus.Subscribe;
 import com.google.inject.Provides;
 import net.runelite.api.*;
 import net.runelite.api.events.ConfigChanged;
@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @PluginDescriptor(
-        name = "Hide Prayers",
+        name = "!Hide Prayers",
         description = "Hides specific Prayers in the Prayer tab."
 )
 public class HidePrayersPlugin extends Plugin

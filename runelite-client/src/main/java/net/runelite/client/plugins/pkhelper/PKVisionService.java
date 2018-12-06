@@ -9,13 +9,13 @@ import net.runelite.api.Player;
 import net.runelite.client.util.MiscUtils;
 
 @Singleton
-public class PKHelperService
+public class PKVisionService
 {
     private final Client client;
-    private final PKHelperConfig config;
+    private final PKVisionConfig config;
 
     @Inject
-    private PKHelperService(Client client, PKHelperConfig config)
+    private PKVisionService(Client client, PKVisionConfig config)
     {
         this.config = config;
         this.client = client;
