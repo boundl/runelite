@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.pkhelper;
+package net.runelite.client.plugins.pkvision;
 
 import net.runelite.client.eventbus.Subscribe;
 import com.google.inject.Provides;

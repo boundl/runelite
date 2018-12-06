@@ -67,6 +67,11 @@ public class MiscUtils
     {
         return Math.max(min, Math.min(max, val));
     }
+    
+    public static float clamp(float val, float min, float max)
+    {
+        return Math.max(min, Math.min(max, val));
+    }
 
     public static boolean inWilderness(Client client)
     {

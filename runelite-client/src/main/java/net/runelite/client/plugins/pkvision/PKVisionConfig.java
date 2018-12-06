@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.pkhelper;
+package net.runelite.client.plugins.pkvision;
 
 import java.awt.Color;
 import net.runelite.client.config.Config;

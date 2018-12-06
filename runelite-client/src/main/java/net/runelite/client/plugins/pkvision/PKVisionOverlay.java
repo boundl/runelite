@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.pkhelper;
+package net.runelite.client.plugins.pkvision;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -42,7 +42,7 @@ public class PKVisionOverlay extends Overlay
 
         String text = "";
         if (config.drawPlayerLevels())
-            text += "(" + Integer.toString(actor.getCombatLevel()) + ") ";
+            text += "(" + actor.getCombatLevel() + ") ";
 
         if (config.drawPlayerNames())
             text += actor.getName().replace('\u00A0', ' ');
