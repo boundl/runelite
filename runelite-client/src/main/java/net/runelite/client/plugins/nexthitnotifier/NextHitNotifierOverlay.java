@@ -17,7 +17,7 @@ public class NextHitNotifierOverlay extends Overlay
     private final NextHitNotifierConfig config;
 
     private final PanelComponent panelComponent = new PanelComponent();
-    private final Dimension panelSize = new Dimension(26, 0);
+    private final Dimension panelSize = new Dimension(48, 0);
 
     @Inject
     private NextHitNotifierOverlay(Client client, NextHitNotifierPlugin plugin, NextHitNotifierConfig config)
@@ -41,7 +41,7 @@ public class NextHitNotifierOverlay extends Overlay
 
         if (plugin.showTime < 0)
         {
-            lastHitText = "Next hit: 0";
+            lastHitText = "0";
             lastHit = 0;
         }
         
@@ -50,9 +50,8 @@ public class NextHitNotifierOverlay extends Overlay
 
         Color textColor = Color.getHSBColor(Color.RGBtoHSB(r, g, 0, null)[0], 1.f, 1.f);
 
-        panelComponent.getChildren().add(TitleComponent.builder().text("Next hit: " + lastHitText).color(textColor).build());
-        
-        panelComponent.getChildren().add(TitleComponent.builder().text(String.valueOf(MiscUtils.getWildernessLevelFrom(client, client.getLocalPlayer().getWorldLocation()))).color(Color.YELLOW).build());
+        panelComponent.getChildren().add(TitleComponent.builder().text("Next hit:").color(Color.YELLOW).build());
+        panelComponent.getChildren().add(TitleComponent.builder().text(lastHitText).color(textColor).build());
 
         return panelComponent.render(graphics);
     }

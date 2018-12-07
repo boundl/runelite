@@ -100,9 +100,12 @@ public class NextHitNotifierPlugin extends Plugin
 
         //filter out big xp drops (such as login)
         if (gainedXp > 1000)
+        {
+            lastHpXp = client.getSkillExperience(skill);
             return;
+        }
 
-        lastHit = (int)Math.ceil(gainedXp / 1.33f);
+        lastHit = Math.round(gainedXp / 1.33f);
         lastHpXp = currentXp;
         showTime = 3;
     }
