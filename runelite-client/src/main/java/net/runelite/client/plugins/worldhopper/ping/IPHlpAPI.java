@@ -22,15 +22,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.game;
+package net.runelite.client.plugins.worldhopper.ping;
 
-import lombok.Value;
-import net.runelite.api.coords.LocalPoint;
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+import com.sun.jna.Pointer;
 
-@Value
-public class ItemStack
+interface IPHlpAPI extends Library
 {
-	private final int id;
-	private final int quantity;
-	private final LocalPoint location;
+	IPHlpAPI INSTANCE = Native.loadLibrary("IPHlpAPI", IPHlpAPI.class);
+
+	Pointer IcmpCreateFile();
+
+	boolean IcmpCloseHandle(Pointer handle);
+
+	int IcmpSendEcho(Pointer IcmpHandle, int DestinationAddress, Pointer RequestData, short RequestSize, Pointer RequestOptions, IcmpEchoReply ReplyBuffer, int ReplySize, int Timeout);
 }
