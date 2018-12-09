@@ -129,9 +129,6 @@ public class TimersPlugin extends Plugin
 	private OverlayManager overlayManager;
 
 	@Inject
-	private FreezeBarOverlay barOverlay;
-
-	@Inject
 	private FreezeManager freezeManager;
 
 	@Inject
@@ -146,7 +143,6 @@ public class TimersPlugin extends Plugin
 	@Override
 	protected void startUp()
 	{
-		overlayManager.add(barOverlay);
 		overlayManager.add(freezeOverlay);
 	}
 
@@ -161,7 +157,6 @@ public class TimersPlugin extends Plugin
 		loggedInRace = false;
 		widgetHiddenChangedOnPvpWorld = false;
 
-		overlayManager.remove(barOverlay);
 		overlayManager.remove(freezeOverlay);
 	}
 
@@ -553,11 +548,6 @@ public class TimersPlugin extends Plugin
 				removeGameTimer(freezeTimer.getTimer());
 				freezeTimer = null;
 			}
-		}
-
-		if (config.showFreezeBar())
-		{
-			barOverlay.onTick();
 		}
 
 		lastPoint = currentWorldPoint;

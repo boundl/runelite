@@ -76,6 +76,8 @@ public class NextHitNotifierPlugin extends Plugin
     {
         if (showTime > 0)
             showTime--;
+        else
+            lastHit = 0;
     }
 
     @Subscribe
