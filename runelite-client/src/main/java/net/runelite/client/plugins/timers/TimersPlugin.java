@@ -50,6 +50,7 @@ import net.runelite.api.WorldType;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
 import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.WidgetInfo;
 import static net.runelite.api.widgets.WidgetInfo.PVP_WORLD_SAFE_ZONE;
 import net.runelite.client.config.ConfigManager;
@@ -58,10 +59,12 @@ import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import static net.runelite.client.plugins.timers.GameIndicator.VENGEANCE_ACTIVE;
 import static net.runelite.client.plugins.timers.GameTimer.*;
 
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
+import net.runelite.client.util.Text;
 
 @PluginDescriptor(
 	name = "Timers",
@@ -98,6 +101,7 @@ public class TimersPlugin extends Plugin
 	private static final String SUPER_ANTIFIRE_DRINK_MESSAGE = "You drink some of your super antifire potion";
 	private static final String SUPER_ANTIFIRE_EXPIRED_MESSAGE = "<col=7f007f>Your super antifire potion has expired.</col>";
 	private static final String SUPER_ANTIVENOM_DRINK_MESSAGE = "You drink some of your super antivenom potion";
+	private static final String VENGEANCE_USED_MESSAGE = "Taste vengeance!";
 
 	public TimerTimer freezeTimer;
 	public int freezeTime = -1; // time frozen, in game ticks
@@ -371,6 +375,11 @@ public class TimersPlugin extends Plugin
 	@Subscribe
 	public void onChatMessage(ChatMessage event)
 	{
+		if (config.showVengeanceActive() && event.getMessage().equals(VENGEANCE_USED_MESSAGE) && event.getType() == ChatMessageType.PUBLIC
+			&& Text.toJagexName(event.getName()).equals(client.getLocalPlayer().getName()))
+		{
+			removeGameIndicator(VENGEANCE_ACTIVE);
+		}
 
 		if (event.getType() != ChatMessageType.FILTERED && event.getType() != ChatMessageType.SERVER)
 		{
@@ -459,7 +468,9 @@ public class TimersPlugin extends Plugin
 
 		if (config.showTeleblock() && event.getMessage().equals(HALF_TELEBLOCK_MESSAGE))
 		{
-			if (client.getWorldType().contains(WorldType.DEADMAN))
+			if (client.getWorldType().contains(WorldType.DEADMAN)
+				&& !client.getWorldType().contains(WorldType.SEASONAL_DEADMAN)
+				&& !client.getWorldType().contains(WorldType.DEADMAN_TOURNAMENT))
 			{
 				createGameTimer(DMM_FULLTB);
 			}
@@ -577,6 +588,7 @@ public class TimersPlugin extends Plugin
 		{
 			case HOPPING:
 			case LOGIN_SCREEN:
+				removeGameIndicator(VENGEANCE_ACTIVE);
 				removeTbTimers();
 				break;
 			case LOGGED_IN:
@@ -646,6 +658,14 @@ public class TimersPlugin extends Plugin
 		lastAnimation = client.getLocalPlayer().getAnimation();
 	}
 
+	@Subscribe
+	public void onWidgetLoaded(WidgetLoaded event)
+	{
+		if (config.showVengeanceActive() && event.getGroupId() == WidgetID.ENTERING_HOUSE_GROUP_ID)
+		{
+			removeGameIndicator(VENGEANCE_ACTIVE);
+		}
+	}
 
 	@Subscribe
 	public void onGraphicChanged(GraphicChanged event)
@@ -723,12 +743,18 @@ public class TimersPlugin extends Plugin
 			createGameTimer(VENGEANCE);
 		}
 
+		if (config.showVengeanceActive() && actor.getGraphic() == VENGEANCE_ACTIVE.getGraphicId())
+		{
+			createGameIndicator(VENGEANCE_ACTIVE);
+		}
+
 		if (config.showFreezes())
 		{
 			if (actor.getGraphic() == BIND.getGraphicId())
 			{
 				if (client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC)
-					&& !client.getWorldType().contains(WorldType.SEASONAL_DEADMAN))
+					&& !client.getWorldType().contains(WorldType.SEASONAL_DEADMAN)
+					&& !client.getWorldType().contains(WorldType.DEADMAN_TOURNAMENT))
 				{
 					createGameTimer(HALFBIND);
 				}
@@ -741,7 +767,8 @@ public class TimersPlugin extends Plugin
 			if (actor.getGraphic() == SNARE.getGraphicId())
 			{
 				if (client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC)
-					&& !client.getWorldType().contains(WorldType.SEASONAL_DEADMAN))
+					&& !client.getWorldType().contains(WorldType.SEASONAL_DEADMAN)
+					&& !client.getWorldType().contains(WorldType.DEADMAN_TOURNAMENT))
 				{
 					createGameTimer(HALFSNARE);
 				}
@@ -754,7 +781,8 @@ public class TimersPlugin extends Plugin
 			if (actor.getGraphic() == ENTANGLE.getGraphicId())
 			{
 				if (client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC)
-					&& !client.getWorldType().contains(WorldType.SEASONAL_DEADMAN))
+					&& !client.getWorldType().contains(WorldType.SEASONAL_DEADMAN)
+					&& !client.getWorldType().contains(WorldType.DEADMAN_TOURNAMENT))
 				{
 					createGameTimer(HALFENTANGLE);
 				}
@@ -867,6 +895,23 @@ public class TimersPlugin extends Plugin
 	private void removeGameTimer(GameTimer timer)
 	{
 		infoBoxManager.removeIf(t -> t instanceof TimerTimer && ((TimerTimer) t).getTimer() == timer);
+	}
+
+	private IndicatorIndicator createGameIndicator(GameIndicator gameIndicator)
+	{
+		removeGameIndicator(gameIndicator);
+
+		BufferedImage image = gameIndicator.getImage(itemManager, spriteManager);
+		IndicatorIndicator indicator = new IndicatorIndicator(gameIndicator, image, this);
+		indicator.setTooltip(gameIndicator.getDescription());
+		infoBoxManager.addInfoBox(indicator);
+
+		return indicator;
+	}
+
+	private void removeGameIndicator(GameIndicator indicator)
+	{
+		infoBoxManager.removeIf(t -> t instanceof IndicatorIndicator && ((IndicatorIndicator) t).getIndicator() == indicator);
 	}
 
 	private void removeTbTimers()
