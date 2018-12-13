@@ -26,6 +26,7 @@ package net.runelite.client.plugins.config;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.common.primitives.Ints;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -350,12 +351,22 @@ public class ConfigPanel extends PluginPanel
 					max = range.max();
 				}
 
+				// Config may previously have been out of range
+				value = Ints.constrainToRange(value, min, max);
+
 				SpinnerModel model = new SpinnerNumberModel(value, min, max, 1);
 				JSpinner spinner = new JSpinner(model);
 				Component editor = spinner.getEditor();
 				JFormattedTextField spinnerTextField = ((JSpinner.DefaultEditor) editor).getTextField();
 				spinnerTextField.setColumns(SPINNER_FIELD_WIDTH);
-				spinner.addChangeListener(ce -> changeConfiguration(listItem, config, spinner, cd, cid));
+				spinnerTextField.addFocusListener(new FocusAdapter()
+				{
+					@Override
+					public void focusLost(FocusEvent e)
+					{
+						changeConfiguration(listItem, config, spinner, cd, cid);
+					}
+				});
 
 				item.add(spinner, BorderLayout.EAST);
 			}
