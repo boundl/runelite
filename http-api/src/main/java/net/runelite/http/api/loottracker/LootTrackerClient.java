@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Abex
+ * Copyright (c) 2018, Adam <Adam@sigterm.info>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,35 +22,56 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.api;
+package net.runelite.http.api.loottracker;
 
-import java.awt.Canvas;
+import com.google.gson.Gson;
+import java.io.IOException;
+import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.runelite.http.api.RuneLiteAPI;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
-/**
- * Represents the client game engine.
- */
-public interface GameEngine
+@Slf4j
+@AllArgsConstructor
+public class LootTrackerClient
 {
-	/**
-	 * Gets the canvas that contains everything.
-	 *
-	 * @return the game canvas
-	 */
-	Canvas getCanvas();
+	private static final MediaType JSON = MediaType.parse("application/json");
+	private static final Gson GSON = RuneLiteAPI.GSON;
 
-	/**
-	 * Gets the client main thread.
-	 *
-	 * @return the main thread
-	 */
-	Thread getClientThread();
+	private final UUID uuid;
 
-	/**
-	 * Checks whether this code is executing on the client main thread.
-	 *
-	 * @return true if on the main thread, false otherwise
-	 */
-	boolean isClientThread();
+	public void submit(LootRecord lootRecord)
+	{
+		HttpUrl url = RuneLiteAPI.getApiBase().newBuilder()
+			.addPathSegment("loottracker")
+			.build();
 
-	void resizeCanvas();
+		Request request = new Request.Builder()
+			.header(RuneLiteAPI.RUNELITE_AUTH, uuid.toString())
+			.post(RequestBody.create(JSON, GSON.toJson(lootRecord)))
+			.url(url)
+			.build();
+
+		RuneLiteAPI.CLIENT.newCall(request).enqueue(new Callback()
+		{
+			@Override
+			public void onFailure(Call call, IOException e)
+			{
+				log.warn("unable to submit loot", e);
+			}
+
+			@Override
+			public void onResponse(Call call, Response response) throws IOException
+			{
+				log.debug("Submitted loot");
+			}
+		});
+	}
 }
