@@ -22,23 +22,6 @@ public class MiscUtils
     {
         if (point == null)
             return false;
-        
-        /*
-        Polygon abovePoly = new Polygon();
-        Polygon underPoly = new Polygon();
-        
-        // Above ground
-        abovePoly.addPoint(2944, 3523);
-        abovePoly.addPoint(3392, 3523);
-        abovePoly.addPoint(3392, 3971);
-        abovePoly.addPoint(2944, 3971);
-    
-        // Underground
-        underPoly.addPoint(2944, 9918);
-        underPoly.addPoint(2944, 10360);
-        underPoly.addPoint(3264, 10360);
-        underPoly.addPoint(3264, 9918);
-        */
     
         return abovePoly.contains(point.getX(), point.getY()) || belowPoly.contains(point.getX(), point.getY());
     }

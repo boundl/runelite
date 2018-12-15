@@ -9,3 +9,4 @@ project.properties
 .settings/
 .classpath
 *.log
+*.log
