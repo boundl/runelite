@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2017, Adam <Adam@sigterm.info>
+ * Copyright (c) 2018, Joris K <kjorisje@gmail.com>
+ * Copyright (c) 2018, Lasse <cronick@zytex.dk>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,46 +23,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.http.service.ws;
+package net.runelite.client.plugins.cooking;
 
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import net.runelite.client.config.Config;
+import net.runelite.client.config.ConfigGroup;
+import net.runelite.client.config.ConfigItem;
 
-public class SessionManager
+@ConfigGroup("cooking")
+public interface CookingConfig extends Config
 {
-	private static final ConcurrentMap<UUID, WSService> sessions = new ConcurrentHashMap<>();
-
-	public static void changeSessionUID(WSService service, UUID uuid)
+	@ConfigItem(
+		position = 1,
+		keyName = "statTimeout",
+		name = "Reset stats (minutes)",
+		description = "Configures the time until the session resets and the overlay is hidden (0 = Disable feature)"
+	)
+	default int statTimeout()
 	{
-		synchronized (service)
-		{
-			remove(service);
-			service.setUuid(uuid);
-			sessions.put(uuid, service);
-		}
-	}
-
-	static void remove(WSService service)
-	{
-		synchronized (service)
-		{
-			UUID current = service.getUuid();
-			if (current != null)
-			{
-				sessions.remove(current);
-				service.setUuid(null);
-			}
-		}
-	}
-
-	public static WSService findSession(UUID uuid)
-	{
-		return sessions.get(uuid);
-	}
-
-	public static int getCount()
-	{
-		return sessions.size();
+		return 5;
 	}
 }

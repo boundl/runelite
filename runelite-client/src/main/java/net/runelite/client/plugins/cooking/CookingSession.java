@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2017, Adam <Adam@sigterm.info>
+ * Copyright (c) 2018, Joris K <kjorisje@gmail.com>
+ * Copyright (c) 2018, Lasse <cronick@zytex.dk>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,46 +23,38 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.http.service.ws;
+package net.runelite.client.plugins.cooking;
 
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.time.Instant;
+import lombok.AccessLevel;
+import lombok.Getter;
 
-public class SessionManager
+class CookingSession
 {
-	private static final ConcurrentMap<UUID, WSService> sessions = new ConcurrentHashMap<>();
+	@Getter(AccessLevel.PACKAGE)
+	private Instant lastCookingAction;
+	@Getter(AccessLevel.PACKAGE)
+	private int cookAmount;
+	@Getter(AccessLevel.PACKAGE)
+	private int burnAmount;
 
-	public static void changeSessionUID(WSService service, UUID uuid)
+	void updateLastCookingAction()
 	{
-		synchronized (service)
-		{
-			remove(service);
-			service.setUuid(uuid);
-			sessions.put(uuid, service);
-		}
+		this.lastCookingAction = Instant.now();
 	}
 
-	static void remove(WSService service)
+	void increaseCookAmount()
 	{
-		synchronized (service)
-		{
-			UUID current = service.getUuid();
-			if (current != null)
-			{
-				sessions.remove(current);
-				service.setUuid(null);
-			}
-		}
+		this.cookAmount++;
 	}
 
-	public static WSService findSession(UUID uuid)
+	void increaseBurnAmount()
 	{
-		return sessions.get(uuid);
+		this.burnAmount++;
 	}
 
-	public static int getCount()
+	double getBurntPercentage()
 	{
-		return sessions.size();
+		return ((double) getBurnAmount() / (getCookAmount() + getBurnAmount())) * 100;
 	}
 }
