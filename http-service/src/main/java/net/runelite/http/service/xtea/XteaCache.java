@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Tomas Slusny <slusnucky@gmail.com>
+ * Copyright (c) 2018, Adam <Adam@sigterm.info>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,33 +22,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.discord.events;
+package net.runelite.http.service.xtea;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-/**
- * Called when the RPC connection has been established
- */
-@Value
-public class DiscordReady
+@Data
+@AllArgsConstructor
+class XteaCache
 {
-	/**
-	 * The userId for the active user
-	 */
-	private String userId;
-
-	/**
-	 * The username of the active user
-	 */
-	private String username;
-
-	/**
-	 * The discriminator of the active user
-	 */
-	private String discriminator;
-
-	/**
-	 * The avatar of the active user
-	 */
-	private String avatar;
+	private int region;
+	private int key1;
+	private int key2;
+	private int key3;
+	private int key4;
 }
