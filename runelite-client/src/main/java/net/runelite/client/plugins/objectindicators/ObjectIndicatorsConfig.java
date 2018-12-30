@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Psikoi <https://github.com/psikoi>
+ * Copyright (c) 2018, Tomas Slusny <slusnucky@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,39 +23,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.runelite.client.plugins.loottracker;
+package net.runelite.client.plugins.objectindicators;
 
+import java.awt.Color;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
-@ConfigGroup("loottracker")
-public interface LootTrackerConfig extends Config
+@ConfigGroup("objectindicators")
+public interface ObjectIndicatorsConfig extends Config
 {
 	@ConfigItem(
-		keyName = "ignoredItems",
-		name = "Ignored items",
-		description = "Configures which items should be ignored when calculating loot prices."
+		keyName = "markerColor",
+		name = "Marker color",
+		description = "Configures the color of object marker"
 	)
-	default String getIgnoredItems()
+	default Color markerColor()
 	{
-		return "";
-	}
-
-	@ConfigItem(
-		keyName = "ignoredItems",
-		name = "",
-		description = ""
-	)
-	void setIgnoredItems(String key);
-
-	@ConfigItem(
-		keyName = "saveLoot",
-		name = "Save loot",
-		description = "Save loot between client sessions (requires being logged in)"
-	)
-	default boolean saveLoot()
-	{
-		return true;
+		return Color.YELLOW;
 	}
 }

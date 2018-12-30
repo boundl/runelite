@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Psikoi <https://github.com/psikoi>
+ * Copyright (c) 2018, Tomas Slusny <slusnucky@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,39 +23,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.runelite.client.plugins.loottracker;
+package net.runelite.client.plugins.objectindicators;
 
-import net.runelite.client.config.Config;
-import net.runelite.client.config.ConfigGroup;
-import net.runelite.client.config.ConfigItem;
+import lombok.Value;
 
-@ConfigGroup("loottracker")
-public interface LootTrackerConfig extends Config
+@Value
+class ObjectPoint
 {
-	@ConfigItem(
-		keyName = "ignoredItems",
-		name = "Ignored items",
-		description = "Configures which items should be ignored when calculating loot prices."
-	)
-	default String getIgnoredItems()
-	{
-		return "";
-	}
-
-	@ConfigItem(
-		keyName = "ignoredItems",
-		name = "",
-		description = ""
-	)
-	void setIgnoredItems(String key);
-
-	@ConfigItem(
-		keyName = "saveLoot",
-		name = "Save loot",
-		description = "Save loot between client sessions (requires being logged in)"
-	)
-	default boolean saveLoot()
-	{
-		return true;
-	}
+	private String name;
+	private int regionId;
+	private int regionX;
+	private int regionY;
+	private int z;
 }
