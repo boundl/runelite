@@ -23,7 +23,7 @@ public class NextHitNotifierOverlay extends Overlay
     private NextHitNotifierOverlay(Client client, NextHitNotifierPlugin plugin, NextHitNotifierConfig config)
     {
         setPosition(OverlayPosition.BOTTOM_RIGHT);
-        setPosition(OverlayPosition.DETACHED);
+        setPosition(OverlayPosition.DYNAMIC);
 
         this.client = client;
         this.plugin = plugin;
