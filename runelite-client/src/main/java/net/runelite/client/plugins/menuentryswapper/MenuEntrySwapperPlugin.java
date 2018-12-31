@@ -420,7 +420,11 @@ public class MenuEntrySwapperPlugin extends Plugin
 				swap("quick-travel", option, target, true);
 			}
 		}
-		else if (config.swapTravel() && option.equals("pass") && target.equals("energy barrier"))
+        else if (config.swapObelisk() && option.equals("activate"))
+        {
+            swap("teleport to destination", option, target,true);
+        }
+        else if (config.swapTravel() && option.equals("pass") && target.equals("energy barrier"))
 		{
 			swap("pay-toll(2-ecto)", option, target, true);
 		}

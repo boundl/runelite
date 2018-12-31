@@ -261,4 +261,11 @@ public interface MenuEntrySwapperConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+			keyName = "swapObelisk",
+			name = "Obelisk",
+			description = "swap Obelisk to teleport to destination "
+	)
+	default boolean swapObelisk() { return true; }
 }
