@@ -64,6 +64,8 @@ public class ZulrahOverlay extends Overlay
         this.plugin = plugin;
     }
 
+    //LocalPoint delta;
+
     @Override
     public Dimension render(Graphics2D graphics)
     {
@@ -72,42 +74,55 @@ public class ZulrahOverlay extends Overlay
         if (instance == null)
             return null;
 
+        if (instance.zulrah != null)
+        {
+            LocalPoint temp1 = LocalPoint.fromWorld(client, instance.zulrah.getWorldLocation());
+            LocalPoint temp2 = instance.zulrah.getLocalLocation();
+            //delta = new LocalPoint(temp1.getX() - temp2.getX(), temp1.getY() - temp2.getY());
+
+            Point minimapLocation = instance.zulrah.getMinimapLocation();
+            if (minimapLocation != null)
+            {
+                OverlayUtil.renderMinimapLocation(graphics, minimapLocation, Color.RED);
+                OverlayUtil.renderTextLocation(graphics, minimapLocation, "Zulrah", Color.RED);
+            }
+        }
+
         ZulrahPhase currentPhase = instance.getPhase();
         ZulrahPhase nextPhase = instance.getNextPhase();
 
         if (currentPhase == null)
             return null;
 
-        OverlayUtil.renderTextLocation(graphics, new Point(50, 50), currentPhase.toString(), Color.white);
-
         WorldPoint startTile = instance.getStartLocation();
         if (nextPhase != null && currentPhase.getStandLocation() == nextPhase.getStandLocation())
         {
             drawStandTiles(graphics, startTile, currentPhase, nextPhase);
+            OverlayUtil.renderTextLocation(graphics, new Point(50, 50), "Tile[s]", Color.WHITE);
         }
         else
         {
             drawStandTile(graphics, startTile, currentPhase, false);
             drawStandTile(graphics, startTile, nextPhase, true);
+            OverlayUtil.renderTextLocation(graphics, new Point(50, 50), "Tile", Color.YELLOW);
         }
-        drawZulrahTileMinimap(graphics, startTile, currentPhase, false);
-        drawZulrahTileMinimap(graphics, startTile, nextPhase, true);
+        //drawZulrahTileMinimap(graphics, startTile, currentPhase, false);
+        //drawZulrahTileMinimap(graphics, startTile, nextPhase, true);
 
         return null;
     }
 
+    //localTile = new LocalPoint(localTile.getX() + Perspective.LOCAL_TILE_SIZE / 2, localTile.getY() + Perspective.LOCAL_TILE_SIZE / 2);
     private void drawStandTiles(Graphics2D graphics, WorldPoint startTile, ZulrahPhase currentPhase, ZulrahPhase nextPhase)
     {
         LocalPoint localTile = LocalPoint.fromWorld(client, currentPhase.getStandTile(startTile));
-
-        if (localTile == null)
-            return;
-
-        //localTile = new LocalPoint(localTile.getX() + Perspective.LOCAL_TILE_SIZE / 2, localTile.getY() + Perspective.LOCAL_TILE_SIZE / 2);
+        //localTile = new LocalPoint(localTile.getX() - delta.getX(), localTile.getY() - delta.getY());
 
         Polygon northPoly = getCanvasTileNorthPoly(client, localTile);
         Polygon southPoly = getCanvasTileSouthPoly(client, localTile);
         Polygon poly = Perspective.getCanvasTilePoly(client, localTile);
+
+
         Point textLoc = Perspective.getCanvasTextLocation(client, graphics, localTile, "Next", 0);
 
         if (northPoly != null && southPoly != null && poly != null && textLoc != null)
@@ -115,7 +130,7 @@ public class ZulrahOverlay extends Overlay
             OverlayUtil.renderPolygon(graphics, poly, TILE_BORDER_COLOR);
             OverlayUtil.renderPolygon(graphics, northPoly, currentPhase.getColor());
             OverlayUtil.renderPolygon(graphics, southPoly, nextPhase.getColor());
-            OverlayUtil.renderTextLocation(graphics, textLoc, "Next (local tile)", NEXT_TEXT_COLOR);
+            OverlayUtil.renderTextLocation(graphics, textLoc, "Next", NEXT_TEXT_COLOR);
         }
 
         if (nextPhase.isJad())
@@ -138,11 +153,7 @@ public class ZulrahOverlay extends Overlay
             return;
 
         LocalPoint localTile = LocalPoint.fromWorld(client, phase.getStandTile(startTile));
-
-        if (localTile == null)
-            return;
-
-        //localTile = new LocalPoint(localTile.getX() + Perspective.LOCAL_TILE_SIZE / 2, localTile.getY() + Perspective.LOCAL_TILE_SIZE / 2);
+        //localTile = new LocalPoint(localTile.getX() - delta.getX(), localTile.getY() - delta.getY());
 
         Polygon poly = Perspective.getCanvasTilePoly(client, localTile);
 

@@ -69,12 +69,10 @@ public class ZulrahNextPhaseOverlay extends Overlay
             return null;
         }
 
-        Color backgroundColor = nextPhase.getColor();
         BufferedImage zulrahImage = ZulrahImageManager.getSmallZulrahBufferedImage(nextPhase.getType());
 
         imagePanelComponent.getChildren().clear();
         imagePanelComponent.getChildren().add(TitleComponent.builder().text("Next").build());
-        //imagePanelComponent.setBackgroundColor(backgroundColor);
         imagePanelComponent.getChildren().add(new ImageComponent(zulrahImage));
 
         return imagePanelComponent.render(graphics);

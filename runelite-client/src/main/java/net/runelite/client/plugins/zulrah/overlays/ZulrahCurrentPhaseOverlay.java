@@ -69,15 +69,10 @@ public class ZulrahCurrentPhaseOverlay extends Overlay
             return null;
         }
 
-        String pattern = instance.getPattern() != null ? instance.getPattern().toString() : "Unknown";
-        String title = currentPhase.isJad() ? "JAD PHASE" : pattern;
-        Color backgroundColor = currentPhase.getColor();
         BufferedImage zulrahImage = ZulrahImageManager.getZulrahBufferedImage(currentPhase.getType());
-
         imagePanelComponent.getChildren().clear();
-        imagePanelComponent.getChildren().add(TitleComponent.builder().text(title).build());
+        imagePanelComponent.getChildren().add(TitleComponent.builder().text(currentPhase.isJad() ? "JAD PHASE" : instance.getPattern() != null ? instance.getPattern().toString() : "Unknown").build());
         imagePanelComponent.getChildren().add(new ImageComponent(zulrahImage));
-        //imagePanelComponent.setBackgroundColor(backgroundColor);
 
         return imagePanelComponent.render(graphics);
     }

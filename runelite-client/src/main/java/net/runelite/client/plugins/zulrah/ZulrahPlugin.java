@@ -33,10 +33,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.NPC;
-import net.runelite.api.Query;
+import net.runelite.api.*;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.queries.NPCQuery;
 import net.runelite.client.config.ConfigManager;
@@ -145,7 +143,6 @@ public class ZulrahPlugin extends Plugin
             }
             return;
         }
-        
 
         if (instance == null)
         {
@@ -201,7 +198,7 @@ public class ZulrahPlugin extends Plugin
 
     private NPC findZulrah()
     {
-        Query query = new NPCQuery().nameEquals("Zulrah");
+        Query query = new NPCQuery().idEquals(NpcID.ZULRAH, NpcID.ZULRAH_2043, NpcID.ZULRAH_2044);//new NPCQuery().nameEquals("Zulrah");
         NPC[] result = queryRunner.runQuery(query);
         return result.length == 1 ? result[0] : null;
     }

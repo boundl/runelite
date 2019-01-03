@@ -27,9 +27,7 @@ package net.runelite.client.plugins.zulrah;
 
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
-import net.runelite.api.Point;
 import net.runelite.api.Prayer;
-import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.zulrah.patterns.ZulrahPattern;
 import net.runelite.client.plugins.zulrah.phase.StandLocation;
@@ -39,30 +37,11 @@ import net.runelite.client.plugins.zulrah.phase.ZulrahType;
 
 public class ZulrahInstance
 {
-    private static final ZulrahPhase NO_PATTERN_MAGIC_PHASE = new ZulrahPhase(
-            ZulrahLocation.NORTH,
-            ZulrahType.MAGIC,
-            false,
-            StandLocation.PILLAR_WEST_OUTSIDE,
-            Prayer.PROTECT_FROM_MAGIC
-    );
-    private static final ZulrahPhase NO_PATTERN_RANGE_PHASE = new ZulrahPhase(
-            ZulrahLocation.NORTH,
-            ZulrahType.RANGE,
-            false,
-            StandLocation.TOP_EAST,
-            Prayer.PROTECT_FROM_MISSILES
-    );
-    private static final ZulrahPhase PATTERN_A_OR_B_RANGE_PHASE = new ZulrahPhase(
-            ZulrahLocation.NORTH,
-            ZulrahType.RANGE,
-            false,
-            StandLocation.PILLAR_WEST_OUTSIDE,
-            Prayer.PROTECT_FROM_MISSILES
-    );
+    private static final ZulrahPhase NO_PATTERN_MAGIC_PHASE = new ZulrahPhase(ZulrahLocation.NORTH, ZulrahType.MAGIC, false, StandLocation.PILLAR_WEST_OUTSIDE, Prayer.PROTECT_FROM_MAGIC);
+    private static final ZulrahPhase NO_PATTERN_RANGE_PHASE = new ZulrahPhase(ZulrahLocation.NORTH, ZulrahType.RANGE, false, StandLocation.TOP_EAST, Prayer.PROTECT_FROM_MISSILES);
+    private static final ZulrahPhase PATTERN_A_OR_B_RANGE_PHASE = new ZulrahPhase(ZulrahLocation.NORTH, ZulrahType.RANGE, false, StandLocation.PILLAR_WEST_OUTSIDE, Prayer.PROTECT_FROM_MISSILES);
 
     private final WorldPoint startLocation;
-    private final LocalPoint startLocationLocal;
     private ZulrahPattern pattern;
     private int stage;
     private ZulrahPhase phase;
@@ -70,19 +49,13 @@ public class ZulrahInstance
 
     ZulrahInstance(Client client, NPC zulrah)
     {
-        this.startLocation = WorldPoint.fromLocal(client, zulrah.getLocalLocation());
-        this.startLocationLocal = zulrah.getLocalLocation();
         this.zulrah = zulrah;
+        this.startLocation = WorldPoint.fromLocalInstance(client, zulrah.getLocalLocation());
     }
 
     public WorldPoint getStartLocation()
     {
         return startLocation;
-    }
-
-    public LocalPoint getStartLocationLocal()
-    {
-        return startLocationLocal;
     }
 
     public ZulrahPattern getPattern()
@@ -95,12 +68,12 @@ public class ZulrahInstance
         this.pattern = pattern;
     }
 
-    public int getStage()
+    int getStage()
     {
         return stage;
     }
 
-    public void nextStage()
+    void nextStage()
     {
         ++stage;
     }
@@ -109,15 +82,16 @@ public class ZulrahInstance
     {
         pattern = null;
         stage = 0;
+        zulrah = null;
     }
 
     public ZulrahPhase getPhase()
     {
         ZulrahPhase patternPhase = null;
+
         if (pattern != null)
-        {
             patternPhase = pattern.get(stage);
-        }
+
         return patternPhase != null ? patternPhase : phase;
     }
 
