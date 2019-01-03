@@ -50,7 +50,7 @@ public class ZulrahPrayerOverlay extends Overlay
     private final PanelComponent imagePanelComponent = new PanelComponent();
 
     @Inject
-    ZulrahPrayerOverlay(@Nullable Client client, ZulrahPlugin plugin)
+    ZulrahPrayerOverlay(Client client, ZulrahPlugin plugin)
     {
         setPosition(OverlayPosition.BOTTOM_RIGHT);
         setPriority(OverlayPriority.MED);

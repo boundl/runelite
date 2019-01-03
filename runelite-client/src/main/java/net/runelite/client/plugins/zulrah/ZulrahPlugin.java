@@ -53,6 +53,7 @@ import net.runelite.client.plugins.zulrah.patterns.ZulrahPatternD;
 import net.runelite.client.plugins.zulrah.phase.ZulrahPhase;
 import net.runelite.client.task.Schedule;
 import net.runelite.client.ui.overlay.Overlay;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.QueryRunner;
 
 @PluginDescriptor(
@@ -63,6 +64,9 @@ import net.runelite.client.util.QueryRunner;
 @Slf4j
 public class ZulrahPlugin extends Plugin
 {
+    @Inject
+    private OverlayManager overlayManager;
+
     @Inject
     QueryRunner queryRunner;
 
@@ -84,13 +88,25 @@ public class ZulrahPlugin extends Plugin
     @Inject
     ZulrahPrayerOverlay zulrahPrayerOverlay;
 
-    private final ZulrahPattern[] patterns = new ZulrahPattern[]
-            {
-                    new ZulrahPatternA(),
-                    new ZulrahPatternB(),
-                    new ZulrahPatternC(),
-                    new ZulrahPatternD()
-            };
+    @Override
+    protected void startUp() throws Exception
+    {
+        overlayManager.add(overlay);
+        overlayManager.add(currentPhaseOverlay);
+        overlayManager.add(nextPhaseOverlay);
+        overlayManager.add(zulrahPrayerOverlay);
+    }
+
+    @Override
+    protected void shutDown() throws Exception
+    {
+        overlayManager.remove(overlay);
+        overlayManager.remove(currentPhaseOverlay);
+        overlayManager.remove(nextPhaseOverlay);
+        overlayManager.remove(zulrahPrayerOverlay);
+    }
+
+    private final ZulrahPattern[] patterns = new ZulrahPattern[] { new ZulrahPatternA(), new ZulrahPatternB(), new ZulrahPatternC(), new ZulrahPatternD() };
 
     private ZulrahInstance instance;
 

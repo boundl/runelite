@@ -43,15 +43,14 @@ import java.awt.image.BufferedImage;
 public class ZulrahNextPhaseOverlay extends Overlay
 {
     private final ZulrahPlugin plugin;
-
     private final PanelComponent imagePanelComponent = new PanelComponent();
 
     @Inject
     ZulrahNextPhaseOverlay(ZulrahPlugin plugin)
     {
+        this.plugin = plugin;
         setPosition(OverlayPosition.BOTTOM_RIGHT);
         setPriority(OverlayPriority.HIGH);
-        this.plugin = plugin;
     }
 
     @Override

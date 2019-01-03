@@ -33,7 +33,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -57,7 +56,7 @@ public class ZulrahOverlay extends Overlay
     private final ZulrahPlugin plugin;
 
     @Inject
-    ZulrahOverlay(@Nullable Client client, ZulrahPlugin plugin)
+    ZulrahOverlay(Client client, ZulrahPlugin plugin)
     {
         setPosition(OverlayPosition.DYNAMIC);
         this.client = client;
