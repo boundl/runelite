@@ -28,13 +28,14 @@ package net.runelite.client.plugins.zulrah;
 
 import com.google.inject.Binder;
 import com.google.inject.Provides;
-import java.time.temporal.ChronoUnit;
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
-import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.Client;
+import net.runelite.api.GameState;
+import net.runelite.api.NPC;
+import net.runelite.api.Query;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.queries.NPCQuery;
 import net.runelite.client.config.ConfigManager;
@@ -51,15 +52,12 @@ import net.runelite.client.plugins.zulrah.patterns.ZulrahPatternB;
 import net.runelite.client.plugins.zulrah.patterns.ZulrahPatternC;
 import net.runelite.client.plugins.zulrah.patterns.ZulrahPatternD;
 import net.runelite.client.plugins.zulrah.phase.ZulrahPhase;
-import net.runelite.client.task.Schedule;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.QueryRunner;
 
 @PluginDescriptor(
-        name = "!Zulrah Helper",
-        description = "Zulrah helper",
-        tags = { "zulrah", "helper", "pvm", "boss", "pve", "bogla" }
+        name = "Zulrah plugin"
 )
 @Slf4j
 public class ZulrahPlugin extends Plugin
@@ -88,25 +86,13 @@ public class ZulrahPlugin extends Plugin
     @Inject
     ZulrahPrayerOverlay zulrahPrayerOverlay;
 
-    @Override
-    protected void startUp() throws Exception
-    {
-        overlayManager.add(overlay);
-        overlayManager.add(currentPhaseOverlay);
-        overlayManager.add(nextPhaseOverlay);
-        overlayManager.add(zulrahPrayerOverlay);
-    }
-
-    @Override
-    protected void shutDown() throws Exception
-    {
-        overlayManager.remove(overlay);
-        overlayManager.remove(currentPhaseOverlay);
-        overlayManager.remove(nextPhaseOverlay);
-        overlayManager.remove(zulrahPrayerOverlay);
-    }
-
-    private final ZulrahPattern[] patterns = new ZulrahPattern[] { new ZulrahPatternA(), new ZulrahPatternB(), new ZulrahPatternC(), new ZulrahPatternD() };
+    private final ZulrahPattern[] patterns = new ZulrahPattern[]
+            {
+                    new ZulrahPatternA(),
+                    new ZulrahPatternB(),
+                    new ZulrahPatternC(),
+                    new ZulrahPatternD()
+            };
 
     private ZulrahInstance instance;
 
@@ -127,11 +113,31 @@ public class ZulrahPlugin extends Plugin
         return Arrays.asList(overlay, currentPhaseOverlay, nextPhaseOverlay, zulrahPrayerOverlay);
     }
 
+    @Override
+    protected void startUp() throws Exception
+    {
+        overlayManager.add(overlay);
+        overlayManager.add(currentPhaseOverlay);
+        overlayManager.add(nextPhaseOverlay);
+        overlayManager.add(zulrahPrayerOverlay);
+    }
+
+    @Override
+    protected void shutDown() throws Exception
+    {
+        overlayManager.remove(overlay);
+        overlayManager.remove(currentPhaseOverlay);
+        overlayManager.remove(nextPhaseOverlay);
+        overlayManager.remove(zulrahPrayerOverlay);
+    }
+
     @Subscribe
     public void onGameTick(GameTick event)
     {
         if (!config.enabled() || client.getGameState() != GameState.LOGGED_IN)
+        {
             return;
+        }
 
         NPC zulrah = findZulrah();
         if (zulrah == null)
@@ -146,12 +152,11 @@ public class ZulrahPlugin extends Plugin
 
         if (instance == null)
         {
-            instance = new ZulrahInstance(client, zulrah);
+            instance = new ZulrahInstance(zulrah);
             log.debug("Zulrah encounter has started.");
         }
 
         ZulrahPhase currentPhase = ZulrahPhase.valueOf(zulrah, instance.getStartLocation());
-
         if (instance.getPhase() == null)
         {
             instance.setPhase(currentPhase);
@@ -166,7 +171,6 @@ public class ZulrahPlugin extends Plugin
         }
 
         ZulrahPattern pattern = instance.getPattern();
-
         if (pattern == null)
         {
             int potential = 0;
@@ -198,7 +202,7 @@ public class ZulrahPlugin extends Plugin
 
     private NPC findZulrah()
     {
-        Query query = new NPCQuery().idEquals(NpcID.ZULRAH, NpcID.ZULRAH_2043, NpcID.ZULRAH_2044);//new NPCQuery().nameEquals("Zulrah");
+        Query query = new NPCQuery().nameEquals("Zulrah");
         NPC[] result = queryRunner.runQuery(query);
         return result.length == 1 ? result[0] : null;
     }

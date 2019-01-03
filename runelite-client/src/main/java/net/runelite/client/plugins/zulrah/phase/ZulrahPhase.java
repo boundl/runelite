@@ -58,10 +58,10 @@ public class ZulrahPhase
     {
         ZulrahLocation zulrahLocation = ZulrahLocation.valueOf(start, zulrah.getWorldLocation());
         ZulrahType zulrahType = ZulrahType.valueOf(zulrah.getId());
-
         if (zulrahLocation == null || zulrahType == null)
+        {
             return null;
-
+        }
         StandLocation standLocation = zulrahType == ZulrahType.MAGIC ? StandLocation.PILLAR_WEST_OUTSIDE : StandLocation.TOP_EAST;
         Prayer prayer = zulrahType == ZulrahType.MAGIC ? Prayer.PROTECT_FROM_MAGIC : null;
         return new ZulrahPhase(zulrahLocation, zulrahType, false, standLocation, prayer);
@@ -70,7 +70,13 @@ public class ZulrahPhase
     @Override
     public String toString()
     {
-        return "zulrahLoc=" + zulrahLocation + ", standLoc=" + standLocation + ", type=" + type + ", jad=" + jad + ", prayer=" + prayer;
+        return "ZulrahPhase{" +
+                "zulrahLocation=" + zulrahLocation +
+                ", type=" + type +
+                ", jad=" + jad +
+                ", standLocation=" + standLocation +
+                ", prayer=" + prayer +
+                '}';
     }
 
     // world location
@@ -85,7 +91,6 @@ public class ZulrahPhase
                 return new WorldPoint(startTile.getX() + 10, startTile.getY() - 2, 0);
             case WEST:
                 return new WorldPoint(startTile.getX() - 10, startTile.getY() - 2, 0);
-
         }
         return startTile;
     }
@@ -119,6 +124,11 @@ public class ZulrahPhase
                 return new WorldPoint(startTile.getX() + 4, startTile.getY() - 4, 0);
         }
         return startTile;
+    }
+
+    public ZulrahLocation getZulrahLocation()
+    {
+        return zulrahLocation;
     }
 
     public ZulrahType getType()
