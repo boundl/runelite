@@ -104,7 +104,7 @@ public class ZulrahOverlay extends Overlay
         if (localTile == null)
             return;
 
-        //localTile = new LocalPoint(localTile.getX() + Perspective.LOCAL_TILE_SIZE / 2, localTile.getY() + Perspective.LOCAL_TILE_SIZE / 2);
+        localTile = new LocalPoint(localTile.getX() + Perspective.LOCAL_TILE_SIZE / 2, localTile.getY() + Perspective.LOCAL_TILE_SIZE / 2);
 
         Polygon northPoly = getCanvasTileNorthPoly(client, localTile);
         Polygon southPoly = getCanvasTileSouthPoly(client, localTile);
@@ -155,7 +155,7 @@ public class ZulrahOverlay extends Overlay
         if (localTile == null)
             return;
 
-        //localTile = new LocalPoint(localTile.getX() + Perspective.LOCAL_TILE_SIZE / 2, localTile.getY() + Perspective.LOCAL_TILE_SIZE / 2);
+        localTile = new LocalPoint(localTile.getX() + Perspective.LOCAL_TILE_SIZE / 2, localTile.getY() + Perspective.LOCAL_TILE_SIZE / 2);
         Polygon poly = Perspective.getCanvasTilePoly(client, localTile);
         Color color = phase.getColor();
         if (poly != null)
