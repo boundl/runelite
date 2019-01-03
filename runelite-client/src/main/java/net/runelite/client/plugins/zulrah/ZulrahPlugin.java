@@ -135,9 +135,7 @@ public class ZulrahPlugin extends Plugin
     public void update()
     {
         if (!config.enabled() || client.getGameState() != GameState.LOGGED_IN)
-        {
             return;
-        }
 
         NPC zulrah = findZulrah();
         if (zulrah == null)
@@ -157,6 +155,7 @@ public class ZulrahPlugin extends Plugin
         }
 
         ZulrahPhase currentPhase = ZulrahPhase.valueOf(zulrah, instance.getStartLocation());
+
         if (instance.getPhase() == null)
         {
             instance.setPhase(currentPhase);
@@ -171,6 +170,7 @@ public class ZulrahPlugin extends Plugin
         }
 
         ZulrahPattern pattern = instance.getPattern();
+
         if (pattern == null)
         {
             int potential = 0;

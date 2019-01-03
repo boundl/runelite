@@ -58,10 +58,10 @@ public class ZulrahPhase
     {
         ZulrahLocation zulrahLocation = ZulrahLocation.valueOf(start, zulrah.getWorldLocation());
         ZulrahType zulrahType = ZulrahType.valueOf(zulrah.getId());
+
         if (zulrahLocation == null || zulrahType == null)
-        {
             return null;
-        }
+
         StandLocation standLocation = zulrahType == ZulrahType.MAGIC ? StandLocation.PILLAR_WEST_OUTSIDE : StandLocation.TOP_EAST;
         Prayer prayer = zulrahType == ZulrahType.MAGIC ? Prayer.PROTECT_FROM_MAGIC : null;
         return new ZulrahPhase(zulrahLocation, zulrahType, false, standLocation, prayer);
