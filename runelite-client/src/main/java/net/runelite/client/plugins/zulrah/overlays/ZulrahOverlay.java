@@ -106,7 +106,7 @@ public class ZulrahOverlay extends Overlay
         Polygon southPoly = getCanvasTileSouthPoly(client, localTile);
         Polygon poly = Perspective.getCanvasTilePoly(client, localTile);
 
-        Point textLoc = Perspective.getCanvasTextLocation(client, graphics, localTile, "Next", 0);
+        Point textLoc = Perspective.getCanvasTextLocation(client, graphics, localTile, "Stand/Next", 0);
 
         if (northPoly != null && southPoly != null && poly != null && textLoc != null)
         {
@@ -120,7 +120,7 @@ public class ZulrahOverlay extends Overlay
             graphics.setStroke(new BasicStroke(2));
             graphics.drawPolygon(poly);
             graphics.setColor(NEXT_TEXT_COLOR);
-            graphics.drawString("Next", textLoc.getX(), textLoc.getY());
+            graphics.drawString("Stand/Next", textLoc.getX(), textLoc.getY());
         }
 
         if (nextPhase.isJad())
