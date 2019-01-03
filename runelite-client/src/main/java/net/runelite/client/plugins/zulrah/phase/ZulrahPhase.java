@@ -28,6 +28,7 @@ package net.runelite.client.plugins.zulrah.phase;
 import net.runelite.api.NPC;
 import net.runelite.api.Point;
 import net.runelite.api.Prayer;
+import net.runelite.api.coords.WorldPoint;
 
 import java.awt.Color;
 
@@ -79,48 +80,49 @@ public class ZulrahPhase
     }
 
     // world location
-    public Point getZulrahTile(Point startTile)
+    public WorldPoint getZulrahTile(WorldPoint startTile)
     {
         // NORTH doesn't need changing because it is the start
         switch (zulrahLocation)
         {
             case SOUTH:
-                return new Point(startTile.getX(), startTile.getY() - 11);
+                return new WorldPoint(startTile.getX(), startTile.getY() - 11, 0);
             case EAST:
-                return new Point(startTile.getX() + 10, startTile.getY() - 2);
+                return new WorldPoint(startTile.getX() + 10, startTile.getY() - 2, 0);
             case WEST:
-                return new Point(startTile.getX() - 10, startTile.getY() - 2);
+                return new WorldPoint(startTile.getX() - 10, startTile.getY() - 2, 0);
+
         }
         return startTile;
     }
 
     // world location
-    public Point getStandTile(Point startTile)
+    public WorldPoint getStandTile(WorldPoint startTile)
     {
         switch (standLocation)
         {
             case WEST:
-                return new Point(startTile.getX() - 5, startTile.getY());
+                return new WorldPoint(startTile.getX() - 5, startTile.getY(), 0);
             case EAST:
-                return new Point(startTile.getX() + 5, startTile.getY() - 2);
+                return new WorldPoint(startTile.getX() + 5, startTile.getY() - 2, 0);
             case SOUTH:
-                return new Point(startTile.getX(), startTile.getY() - 6);
+                return new WorldPoint(startTile.getX(), startTile.getY() - 6, 0);
             case SOUTH_WEST:
-                return new Point(startTile.getX() - 4, startTile.getY() - 4);
+                return new WorldPoint(startTile.getX() - 4, startTile.getY() - 4, 0);
             case SOUTH_EAST:
-                return new Point(startTile.getX() + 2, startTile.getY() - 6);
+                return new WorldPoint(startTile.getX() + 2, startTile.getY() - 6, 0);
             case TOP_EAST:
-                return new Point(startTile.getX() + 6, startTile.getY() + 2);
+                return new WorldPoint(startTile.getX() + 6, startTile.getY() + 2, 0);
             case TOP_WEST:
-                return new Point(startTile.getX() - 4, startTile.getY() + 3);
+                return new WorldPoint(startTile.getX() - 4, startTile.getY() + 3, 0);
             case PILLAR_WEST_INSIDE:
-                return new Point(startTile.getX() - 4, startTile.getY() - 3);
+                return new WorldPoint(startTile.getX() - 4, startTile.getY() - 3, 0);
             case PILLAR_WEST_OUTSIDE:
-                return new Point(startTile.getX() - 5, startTile.getY() - 3);
+                return new WorldPoint(startTile.getX() - 5, startTile.getY() - 3, 0);
             case PILLAR_EAST_INSIDE:
-                return new Point(startTile.getX() + 4, startTile.getY() - 3);
+                return new WorldPoint(startTile.getX() + 4, startTile.getY() - 3, 0);
             case PILLAR_EAST_OUTSIDE:
-                return new Point(startTile.getX() + 4, startTile.getY() - 4);
+                return new WorldPoint(startTile.getX() + 4, startTile.getY() - 4, 0);
         }
         return startTile;
     }
