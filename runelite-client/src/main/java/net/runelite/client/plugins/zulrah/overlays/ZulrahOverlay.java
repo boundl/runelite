@@ -98,32 +98,22 @@ public class ZulrahOverlay extends Overlay
     {
         LocalPoint localTile = LocalPoint.fromWorld(client, currentPhase.getStandTile(startTile));
 
-        LocalPoint startTileLocal = LocalPoint.fromWorld(client, startTile);
-        if (startTileLocal == null)
-            return;
-
         if (localTile == null)
             return;
 
-        localTile = new LocalPoint(localTile.getX() + Perspective.LOCAL_TILE_SIZE / 2, localTile.getY() + Perspective.LOCAL_TILE_SIZE / 2);
+        //localTile = new LocalPoint(localTile.getX() + Perspective.LOCAL_TILE_SIZE / 2, localTile.getY() + Perspective.LOCAL_TILE_SIZE / 2);
 
         Polygon northPoly = getCanvasTileNorthPoly(client, localTile);
         Polygon southPoly = getCanvasTileSouthPoly(client, localTile);
         Polygon poly = Perspective.getCanvasTilePoly(client, localTile);
-        Polygon tempPoly = Perspective.getCanvasTilePoly(client, startTileLocal);
         Point textLoc = Perspective.getCanvasTextLocation(client, graphics, localTile, "Next (local tile)", 0);
-        Point tempTextLoc = Perspective.getCanvasTextLocation(client, graphics, startTileLocal, "Start Tile", 0);
 
-        if (northPoly != null && southPoly != null && poly != null && textLoc != null && tempPoly != null)
+        if (northPoly != null && southPoly != null && poly != null && textLoc != null)
         {
-            Color northColor = currentPhase.getColor();
-            Color southColor = nextPhase.getColor();
-
             OverlayUtil.renderPolygon(graphics, poly, TILE_BORDER_COLOR);
-            OverlayUtil.renderPolygon(graphics, northPoly, northColor);
-            OverlayUtil.renderPolygon(graphics, southPoly, southColor);
+            OverlayUtil.renderPolygon(graphics, northPoly, currentPhase.getColor());
+            OverlayUtil.renderPolygon(graphics, southPoly, nextPhase.getColor());
             OverlayUtil.renderTextLocation(graphics, textLoc, "Next (local tile)", NEXT_TEXT_COLOR);
-            OverlayUtil.renderTextLocation(graphics, tempTextLoc, "Start Tile", Color.RED);
         }
 
         if (nextPhase.isJad())
@@ -149,29 +139,37 @@ public class ZulrahOverlay extends Overlay
 
         LocalPoint localTile = LocalPoint.fromWorld(client, phase.getStandTile(startTile));
 
-        if (localTile == null)
+        LocalPoint startTileLocal = LocalPoint.fromWorld(client, startTile);
+
+        if (localTile == null || startTileLocal == null)
             return;
 
-        localTile = new LocalPoint(localTile.getX() + Perspective.LOCAL_TILE_SIZE / 2, localTile.getY() + Perspective.LOCAL_TILE_SIZE / 2);
+        //localTile = new LocalPoint(localTile.getX() + Perspective.LOCAL_TILE_SIZE / 2, localTile.getY() + Perspective.LOCAL_TILE_SIZE / 2);
+
         Polygon poly = Perspective.getCanvasTilePoly(client, localTile);
-        Color color = phase.getColor();
-        if (poly != null)
+        Polygon tempPoly = Perspective.getCanvasTilePoly(client, startTileLocal);
+
+        if (poly != null && tempPoly != null)
         {
-            OverlayUtil.renderPolygon(graphics, poly, color);
-            /*graphics.setColor(TILE_BORDER_COLOR);
-            graphics.setStroke(new BasicStroke(2));
-            graphics.drawPolygon(poly);
-            graphics.setColor(color);
-            graphics.fillPolygon(poly);*/
+            OverlayUtil.renderPolygon(graphics, poly, phase.getColor());
+            OverlayUtil.renderPolygon(graphics, tempPoly, Color.RED);
         }
+
         if (next)
         {
             Point textLoc = Perspective.getCanvasTextLocation(client, graphics, localTile, "Next", 0);
             if (textLoc != null)
             {
-                graphics.setColor(NEXT_TEXT_COLOR);
-                graphics.drawString("Next", textLoc.getX(), textLoc.getY());
+                OverlayUtil.renderTextLocation(graphics, textLoc, "Next", NEXT_TEXT_COLOR);
             }
+
+            Point textLocTemp = Perspective.getCanvasTextLocation(client, graphics, startTileLocal, "Start", 0);
+
+            if (textLocTemp != null)
+            {
+                OverlayUtil.renderTextLocation(graphics, textLocTemp, "Start", Color.RED);
+            }
+
             if (phase.isJad())
             {
                 BufferedImage jadPrayerImg = ZulrahImageManager.getProtectionPrayerBufferedImage(phase.getPrayer());
@@ -181,7 +179,7 @@ public class ZulrahOverlay extends Overlay
                     Point imageLoc = Perspective.getCanvasImageLocation(client, localTile, jadPrayerImg, 0);
                     if (imageLoc != null)
                     {
-                        graphics.drawImage(jadPrayerImg, imageLoc.getX(), imageLoc.getY(), null);
+                        OverlayUtil.renderImageLocation(graphics, imageLoc, jadPrayerImg);
                     }
                 }
             }
