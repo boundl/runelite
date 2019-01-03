@@ -34,10 +34,10 @@ import java.awt.Color;
 
 public class ZulrahPhase
 {
-    private static final Color RANGE_COLOR = new Color(150, 255, 0, 100);
-    private static final Color MAGIC_COLOR = new Color(20, 170, 200, 100);
-    private static final Color MELEE_COLOR = new Color(180, 50, 20, 100);
-    private static final Color JAD_COLOR = new Color(255, 115, 0, 100);
+    private static final Color RANGE_COLOR = new Color(0, 255, 0, 200);
+    private static final Color MAGIC_COLOR = new Color(0, 0, 255, 200);
+    private static final Color MELEE_COLOR = new Color(255, 0, 0, 200);
+    private static final Color JAD_COLOR = new Color(255, 255, 0, 200);
 
     private final ZulrahLocation zulrahLocation;
     private final ZulrahType type;
