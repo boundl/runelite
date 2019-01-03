@@ -148,7 +148,7 @@ public class ZulrahPlugin extends Plugin
 
         if (instance == null)
         {
-            instance = new ZulrahInstance(zulrah);
+            instance = new ZulrahInstance(client, zulrah);
             log.debug("Zulrah encounter has started.");
         }
 

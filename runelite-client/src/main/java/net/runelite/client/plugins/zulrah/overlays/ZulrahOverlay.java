@@ -72,19 +72,6 @@ public class ZulrahOverlay extends Overlay
         if (instance == null)
             return null;
 
-        if (instance.zulrah != null)
-        {
-            WorldPoint tempworldpoint = instance.zulrah.getWorldLocation();
-            LocalPoint templocalpoint = instance.zulrah.getLocalLocation();
-
-            OverlayUtil.renderTextLocation(graphics, Perspective.localToCanvas(client, LocalPoint.fromWorld(client, tempworldpoint), 0), "ZulrahLocalPoint", Color.YELLOW);
-            OverlayUtil.renderTextLocation(graphics, Perspective.localToCanvas(client, templocalpoint, 0), "ZulrahLocalPoint", Color.ORANGE);
-
-            Polygon temp = instance.zulrah.getCanvasTilePoly();
-            OverlayUtil.renderPolygon(graphics, temp, Color.blue);
-            return null;
-        }
-
         ZulrahPhase currentPhase = instance.getPhase();
         ZulrahPhase nextPhase = instance.getNextPhase();
 
