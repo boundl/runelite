@@ -1,40 +1,11 @@
-/*
- * Copyright (c) 2017, Aria <aria@ar1as.space>
- * Copyright (c) 2017, Devin French <https://github.com/devinfrench>
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 package net.runelite.client.plugins.zulrah.overlays;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import javax.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
 import net.runelite.api.Point;
@@ -42,17 +13,15 @@ import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.zulrah.ZulrahInstance;
 import net.runelite.client.plugins.zulrah.ZulrahPlugin;
-import net.runelite.client.plugins.zulrah.phase.ZulrahLocation;
 import net.runelite.client.plugins.zulrah.phase.ZulrahPhase;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayUtil;
 
-@Slf4j
 public class ZulrahOverlay extends Overlay
 {
-    private static final Color TILE_BORDER_COLOR = new Color(0, 0, 0, 100);
-    private static final Color NEXT_TEXT_COLOR = new Color(255, 255, 255, 100);
+    private static final Color TILE_BORDER_COLOR = new Color(0, 0, 0, 150);
+    private static final Color NEXT_TEXT_COLOR = new Color(255, 255, 255, 150);
 
     private final Client client;
     private final ZulrahPlugin plugin;
@@ -71,16 +40,13 @@ public class ZulrahOverlay extends Overlay
         ZulrahInstance instance = plugin.getInstance();
 
         if (instance == null)
-        {
             return null;
-        }
 
         ZulrahPhase currentPhase = instance.getPhase();
         ZulrahPhase nextPhase = instance.getNextPhase();
+
         if (currentPhase == null)
-        {
             return null;
-        }
 
         WorldPoint startTile = instance.getStartLocation();
         startTile = new WorldPoint(startTile.getX() + 2, startTile.getY() + 2, startTile.getPlane());
@@ -115,40 +81,32 @@ public class ZulrahOverlay extends Overlay
 
         if (northPoly != null && southPoly != null && poly != null && textLoc != null)
         {
-            Color northColor = currentPhase.getColor();
-            Color southColor = nextPhase.getColor();
-            graphics.setColor(northColor);
-            graphics.fillPolygon(northPoly);
-            graphics.setColor(southColor);
-            graphics.fillPolygon(southPoly);
-            graphics.setColor(TILE_BORDER_COLOR);
-            graphics.setStroke(new BasicStroke(2));
-            graphics.drawPolygon(poly);
-            graphics.setColor(NEXT_TEXT_COLOR);
-            graphics.drawString("Stand/Next", textLoc.getX(), textLoc.getY());
+            OverlayUtil.renderPolygon(graphics, northPoly, currentPhase.getColor());
+            OverlayUtil.renderPolygon(graphics, southPoly, nextPhase.getColor());
+            OverlayUtil.renderPolygon(graphics, poly, TILE_BORDER_COLOR);
+            OverlayUtil.renderTextLocation(graphics, textLoc, "Stand/Next", NEXT_TEXT_COLOR);
         }
 
-        if (nextPhase.isJad())
-        {
-            BufferedImage jadPrayerImg = ZulrahImageManager.getProtectionPrayerBufferedImage(nextPhase.getPrayer());
+        if (!nextPhase.isJad())
+            return;
 
-            if (jadPrayerImg != null)
-            {
-                Point imageLoc = Perspective.getCanvasImageLocation(client, localTile, jadPrayerImg, 0);
-                if (imageLoc != null)
-                {
-                    graphics.drawImage(jadPrayerImg, imageLoc.getX(), imageLoc.getY(), null);
-                }
-            }
-        }
+        BufferedImage jadPrayerImg = ZulrahImageManager.getProtectionPrayerBufferedImage(nextPhase.getPrayer());
+
+        if (jadPrayerImg == null)
+            return;
+
+        Point imageLoc = Perspective.getCanvasImageLocation(client, localTile, jadPrayerImg, 0);
+
+        if (imageLoc == null)
+            return;
+
+        OverlayUtil.renderImageLocation(graphics, imageLoc, jadPrayerImg);
     }
 
     private void drawStandTile(Graphics2D graphics, WorldPoint startTile, ZulrahPhase phase, boolean next)
     {
         if (phase == null)
-        {
             return;
-        }
 
         LocalPoint localTile = LocalPoint.fromWorld(client, phase.getStandTile(startTile));
 
@@ -159,31 +117,24 @@ public class ZulrahOverlay extends Overlay
 
         if (poly != null)
         {
-            graphics.setColor(TILE_BORDER_COLOR);
-            graphics.setStroke(new BasicStroke(2));
-            graphics.drawPolygon(poly);
-            graphics.setColor(phase.getColor());
-            graphics.fillPolygon(poly);
+            OverlayUtil.renderPolygon(graphics, poly, phase.getColor());
 
             if (!next)
             {
                 Point textLoc = Perspective.getCanvasTextLocation(client, graphics, localTile, "Stand", 0);
+
                 if (textLoc != null)
-                {
-                    graphics.setColor(NEXT_TEXT_COLOR);
-                    graphics.drawString("Stand", textLoc.getX(), textLoc.getY());
-                }
+                    OverlayUtil.renderTextLocation(graphics, textLoc, "Stand", NEXT_TEXT_COLOR);
             }
         }
 
         if (next)
         {
             Point textLoc = Perspective.getCanvasTextLocation(client, graphics, localTile, "Next", 0);
+
             if (textLoc != null)
-            {
-                graphics.setColor(NEXT_TEXT_COLOR);
-                graphics.drawString("Next", textLoc.getX(), textLoc.getY());
-            }
+                OverlayUtil.renderTextLocation(graphics, textLoc, "Next", NEXT_TEXT_COLOR);
+
             if (phase.isJad())
             {
                 BufferedImage jadPrayerImg = ZulrahImageManager.getProtectionPrayerBufferedImage(phase.getPrayer());
@@ -191,10 +142,9 @@ public class ZulrahOverlay extends Overlay
                 if (jadPrayerImg != null)
                 {
                     Point imageLoc = Perspective.getCanvasImageLocation(client, localTile, jadPrayerImg, 0);
+
                     if (imageLoc != null)
-                    {
-                        graphics.drawImage(jadPrayerImg, imageLoc.getX(), imageLoc.getY(), null);
-                    }
+                        OverlayUtil.renderImageLocation(graphics, imageLoc, jadPrayerImg);
                 }
             }
         }
@@ -216,7 +166,7 @@ public class ZulrahOverlay extends Overlay
             Polygon poly = Perspective.getCanvasTilePoly(client, zulrahLocalTile);
             Point textLoc = Perspective.getCanvasTextLocation(client, graphics, zulrahLocalTile, "Next", 0);
             OverlayUtil.renderPolygon(graphics, poly, phase.getColor());
-            OverlayUtil.renderTextLocation(graphics, textLoc, "Next", phase.getColor());
+            OverlayUtil.renderTextLocation(graphics, textLoc, "Next", phase.getColor(255));
         }
 
         /*Point zulrahMinimapPoint = Perspective.localToMinimap(client, zulrahLocalTile);

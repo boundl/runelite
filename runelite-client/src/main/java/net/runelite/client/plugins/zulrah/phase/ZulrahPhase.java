@@ -1,43 +1,16 @@
-/*
- * Copyright (c) 2017, Aria <aria@ar1as.space>
- * Copyright (c) 2017, Devin French <https://github.com/devinfrench>
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 package net.runelite.client.plugins.zulrah.phase;
 
 import net.runelite.api.NPC;
-import net.runelite.api.Point;
 import net.runelite.api.Prayer;
 import net.runelite.api.coords.WorldPoint;
-
 import java.awt.Color;
 
 public class ZulrahPhase
 {
-    private static final Color RANGE_COLOR = new Color(0, 255, 0, 200);
-    private static final Color MAGIC_COLOR = new Color(0, 0, 255, 200);
-    private static final Color MELEE_COLOR = new Color(255, 0, 0, 200);
-    private static final Color JAD_COLOR = new Color(255, 255, 0, 200);
+    private static final Color RANGE_COLOR = new Color(0, 255, 0, 150);
+    private static final Color MAGIC_COLOR = new Color(0, 0, 255, 150);
+    private static final Color MELEE_COLOR = new Color(255, 0, 0, 150);
+    private static final Color JAD_COLOR = new Color(255, 255, 0, 150);
 
     private final ZulrahLocation zulrahLocation;
     private final ZulrahType type;
@@ -58,17 +31,15 @@ public class ZulrahPhase
     {
         ZulrahLocation zulrahLocation = ZulrahLocation.valueOf(start, zulrah.getWorldLocation());
         ZulrahType zulrahType = ZulrahType.valueOf(zulrah.getId());
+
         if (zulrahLocation == null || zulrahType == null)
-        {
             return null;
-        }
+
         StandLocation standLocation = zulrahType == ZulrahType.MAGIC ? StandLocation.PILLAR_WEST_OUTSIDE : StandLocation.TOP_EAST;
         Prayer prayer = zulrahType == ZulrahType.MAGIC ? Prayer.PROTECT_FROM_MAGIC : null;
+
         return new ZulrahPhase(zulrahLocation, zulrahType, false, standLocation, prayer);
     }
-
-    @Override
-    public String toString() { return "ZulrahPhase{" + "zulrahLocation=" + zulrahLocation + ", type=" + type + ", jad=" + jad + ", standLocation=" + standLocation + ", prayer=" + prayer + '}'; }
 
     // world location
     public WorldPoint getZulrahTile(WorldPoint startTile)
@@ -176,5 +147,12 @@ public class ZulrahPhase
             }
         }
         return RANGE_COLOR;
+    }
+
+    public Color getColor(int alpha)
+    {
+        Color col = getColor();
+
+        return new Color(col.getRed(), col.getGreen(), col.getBlue(), alpha);
     }
 }
