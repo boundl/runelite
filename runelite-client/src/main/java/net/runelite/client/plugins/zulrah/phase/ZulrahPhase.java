@@ -70,13 +70,7 @@ public class ZulrahPhase
     @Override
     public String toString()
     {
-        return "ZulrahPhase{" +
-                "zulrahLocation=" + zulrahLocation +
-                ", type=" + type +
-                ", jad=" + jad +
-                ", standLocation=" + standLocation +
-                ", prayer=" + prayer +
-                '}';
+        return "zulrahLoc=" + zulrahLocation + ", standLoc=" + standLocation + ", type=" + type + ", jad=" + jad + ", prayer=" + prayer;
     }
 
     // world location
@@ -125,11 +119,6 @@ public class ZulrahPhase
                 return new WorldPoint(startTile.getX() + 4, startTile.getY() - 4, 0);
         }
         return startTile;
-    }
-
-    public ZulrahLocation getZulrahLocation()
-    {
-        return zulrahLocation;
     }
 
     public ZulrahType getType()

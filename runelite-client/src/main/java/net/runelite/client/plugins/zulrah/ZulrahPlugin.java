@@ -37,8 +37,10 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.NPC;
 import net.runelite.api.Query;
+import net.runelite.api.events.GameTick;
 import net.runelite.api.queries.NPCQuery;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.zulrah.overlays.ZulrahCurrentPhaseOverlay;
@@ -122,17 +124,13 @@ public class ZulrahPlugin extends Plugin
         return configManager.getConfig(ZulrahConfig.class);
     }
 
-    //@Override
     public Collection<Overlay> getOverlays()
     {
         return Arrays.asList(overlay, currentPhaseOverlay, nextPhaseOverlay, zulrahPrayerOverlay);
     }
 
-    @Schedule(
-            period = 600,
-            unit = ChronoUnit.MILLIS
-    )
-    public void update()
+    @Subscribe
+    public void onGameTick(GameTick event)
     {
         if (!config.enabled() || client.getGameState() != GameState.LOGGED_IN)
             return;

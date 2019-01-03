@@ -63,10 +63,12 @@ public class ZulrahInstance
     private ZulrahPattern pattern;
     private int stage;
     private ZulrahPhase phase;
+    public NPC zulrah;
 
     ZulrahInstance(NPC zulrah)
     {
         this.startLocation = zulrah.getWorldLocation();
+        this.zulrah = zulrah;
     }
 
     public WorldPoint getStartLocation()
