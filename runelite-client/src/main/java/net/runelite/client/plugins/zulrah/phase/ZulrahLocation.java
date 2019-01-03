@@ -56,7 +56,7 @@ public enum ZulrahLocation
         }
         else
         {
-            log.debug("Unknown Zulrah location dx: {}, dy: {}", dx, dy);
+            log.error("Unknown Zulrah location dx: {}, dy: {}", dx, dy);
             return null;
         }
     }

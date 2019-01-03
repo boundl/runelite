@@ -42,9 +42,11 @@ import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.plugins.zulrah.ZulrahInstance;
 import net.runelite.client.plugins.zulrah.ZulrahPlugin;
+import net.runelite.client.plugins.zulrah.phase.ZulrahLocation;
 import net.runelite.client.plugins.zulrah.phase.ZulrahPhase;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
+import net.runelite.client.ui.overlay.OverlayUtil;
 
 @Slf4j
 public class ZulrahOverlay extends Overlay
@@ -81,6 +83,7 @@ public class ZulrahOverlay extends Overlay
         }
 
         WorldPoint startTile = instance.getStartLocation();
+        startTile = new WorldPoint(startTile.getX() + 2, startTile.getY() + 2, startTile.getPlane());
 
         if (nextPhase != null && currentPhase.getStandLocation() == nextPhase.getStandLocation())
         {
@@ -207,6 +210,12 @@ public class ZulrahOverlay extends Overlay
 
         if (zulrahLocalTile == null)
             return;
+
+        if (next)
+        {
+            Point zulrahLocalPoint = Perspective.localToCanvas(client, zulrahLocalTile,  0);
+            OverlayUtil.renderTextLocation(graphics, zulrahLocalPoint, "Next", phase.getColor());
+        }
 
         Point zulrahMinimapPoint = Perspective.localToMinimap(client, zulrahLocalTile);
 

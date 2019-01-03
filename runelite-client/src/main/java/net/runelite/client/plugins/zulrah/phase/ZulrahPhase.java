@@ -68,16 +68,7 @@ public class ZulrahPhase
     }
 
     @Override
-    public String toString()
-    {
-        return "ZulrahPhase{" +
-                "zulrahLocation=" + zulrahLocation +
-                ", type=" + type +
-                ", jad=" + jad +
-                ", standLocation=" + standLocation +
-                ", prayer=" + prayer +
-                '}';
-    }
+    public String toString() { return "ZulrahPhase{" + "zulrahLocation=" + zulrahLocation + ", type=" + type + ", jad=" + jad + ", standLocation=" + standLocation + ", prayer=" + prayer + '}'; }
 
     // world location
     public WorldPoint getZulrahTile(WorldPoint startTile)

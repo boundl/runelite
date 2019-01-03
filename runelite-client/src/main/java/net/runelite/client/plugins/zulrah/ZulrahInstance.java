@@ -37,63 +37,26 @@ import net.runelite.client.plugins.zulrah.phase.ZulrahType;
 
 public class ZulrahInstance
 {
-    private static final ZulrahPhase NO_PATTERN_MAGIC_PHASE = new ZulrahPhase(
-            ZulrahLocation.NORTH,
-            ZulrahType.MAGIC,
-            false,
-            StandLocation.PILLAR_WEST_OUTSIDE,
-            Prayer.PROTECT_FROM_MAGIC
-    );
-    private static final ZulrahPhase NO_PATTERN_RANGE_PHASE = new ZulrahPhase(
-            ZulrahLocation.NORTH,
-            ZulrahType.RANGE,
-            false,
-            StandLocation.TOP_EAST,
-            Prayer.PROTECT_FROM_MISSILES
-    );
-    private static final ZulrahPhase PATTERN_A_OR_B_RANGE_PHASE = new ZulrahPhase(
-            ZulrahLocation.NORTH,
-            ZulrahType.RANGE,
-            false,
-            StandLocation.PILLAR_WEST_OUTSIDE,
-            Prayer.PROTECT_FROM_MISSILES
-    );
+    private static final ZulrahPhase NO_PATTERN_MAGIC_PHASE = new ZulrahPhase(ZulrahLocation.NORTH, ZulrahType.MAGIC, false, StandLocation.PILLAR_WEST_OUTSIDE, Prayer.PROTECT_FROM_MAGIC);
+    private static final ZulrahPhase NO_PATTERN_RANGE_PHASE = new ZulrahPhase(ZulrahLocation.NORTH, ZulrahType.RANGE, false, StandLocation.TOP_EAST, Prayer.PROTECT_FROM_MISSILES);
+    private static final ZulrahPhase PATTERN_A_OR_B_RANGE_PHASE = new ZulrahPhase(ZulrahLocation.NORTH, ZulrahType.RANGE, false, StandLocation.PILLAR_WEST_OUTSIDE, Prayer.PROTECT_FROM_MISSILES);
 
     private final WorldPoint startLocation;
     private ZulrahPattern pattern;
     private int stage;
     private ZulrahPhase phase;
 
-    ZulrahInstance(NPC zulrah)
-    {
-        WorldPoint point = zulrah.getWorldLocation();
-        this.startLocation = new WorldPoint(point.getX() + 2, point.getY() + 2, point.getPlane());
-    }
+    ZulrahInstance(NPC zulrah) { this.startLocation = zulrah.getWorldLocation(); }
 
-    public WorldPoint getStartLocation()
-    {
-        return startLocation;
-    }
+    public WorldPoint getStartLocation() { return startLocation; }
 
-    public ZulrahPattern getPattern()
-    {
-        return pattern;
-    }
+    public ZulrahPattern getPattern() { return pattern; }
 
-    public void setPattern(ZulrahPattern pattern)
-    {
-        this.pattern = pattern;
-    }
+    public void setPattern(ZulrahPattern pattern) { this.pattern = pattern; }
 
-    int getStage()
-    {
-        return stage;
-    }
+    int getStage() { return stage; }
 
-    void nextStage()
-    {
-        ++stage;
-    }
+    void nextStage() { ++stage; }
 
     public void reset()
     {
@@ -130,7 +93,7 @@ public class ZulrahInstance
             {
                 return standLocation == StandLocation.TOP_EAST ? NO_PATTERN_MAGIC_PHASE : NO_PATTERN_RANGE_PHASE;
             }
-            if (type == ZulrahType.MAGIC)
+            else if (type == ZulrahType.MAGIC)
             {
                 return standLocation == StandLocation.TOP_EAST ? NO_PATTERN_RANGE_PHASE : PATTERN_A_OR_B_RANGE_PHASE;
             }

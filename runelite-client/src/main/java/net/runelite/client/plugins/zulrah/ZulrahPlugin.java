@@ -135,16 +135,15 @@ public class ZulrahPlugin extends Plugin
     public void onGameTick(GameTick event)
     {
         if (!config.enabled() || client.getGameState() != GameState.LOGGED_IN)
-        {
             return;
-        }
 
         NPC zulrah = findZulrah();
         if (zulrah == null)
         {
             if (instance != null)
             {
-                log.debug("Zulrah encounter has ended.");
+
+                log.info("Zulrah encounter has ended.");
                 instance = null;
             }
             return;
