@@ -54,9 +54,9 @@ public class ZulrahPhase
         this.prayer = prayer;
     }
 
-    public static ZulrahPhase valueOf(NPC zulrah, Point start)
+    public static ZulrahPhase valueOf(NPC zulrah, WorldPoint start)
     {
-        ZulrahLocation zulrahLocation = ZulrahLocation.valueOf(start, zulrah.getWorldLocation().toPoint());
+        ZulrahLocation zulrahLocation = ZulrahLocation.valueOf(start, zulrah.getWorldLocation());
         ZulrahType zulrahType = ZulrahType.valueOf(zulrah.getId());
         if (zulrahLocation == null || zulrahType == null)
         {

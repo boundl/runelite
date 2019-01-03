@@ -41,14 +41,14 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class ZulrahCurrentPhaseOverlay extends Overlay
-{
-    private final ZulrahPlugin plugin;
+        {
+            private final ZulrahPlugin plugin;
 
-    private final PanelComponent imagePanelComponent = new PanelComponent();
+            private final PanelComponent imagePanelComponent = new PanelComponent();
 
-    @Inject
-    ZulrahCurrentPhaseOverlay(ZulrahPlugin plugin)
-    {
+            @Inject
+                    ZulrahCurrentPhaseOverlay(ZulrahPlugin plugin)
+            {
         setPosition(OverlayPosition.BOTTOM_RIGHT);
         setPriority(OverlayPriority.HIGH);
         this.plugin = plugin;

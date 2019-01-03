@@ -27,13 +27,14 @@ package net.runelite.client.plugins.zulrah.phase;
 
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Point;
+import net.runelite.api.coords.WorldPoint;
 
 @Slf4j
 public enum ZulrahLocation
 {
     NORTH, SOUTH, EAST, WEST;
 
-    public static ZulrahLocation valueOf(Point start, Point current)
+    public static ZulrahLocation valueOf(WorldPoint start, WorldPoint current)
     {
         int dx = start.getX() - current.getX();
         int dy = start.getY() - current.getY();
