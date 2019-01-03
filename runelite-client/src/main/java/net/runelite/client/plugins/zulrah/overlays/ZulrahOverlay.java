@@ -213,11 +213,13 @@ public class ZulrahOverlay extends Overlay
 
         if (next)
         {
-            Point zulrahLocalPoint = Perspective.localToCanvas(client, zulrahLocalTile,  0);
-            OverlayUtil.renderTextLocation(graphics, zulrahLocalPoint, "Next", phase.getColor());
+            Polygon poly = Perspective.getCanvasTilePoly(client, zulrahLocalTile);
+            Point textLoc = Perspective.getCanvasTextLocation(client, graphics, zulrahLocalTile, "Next", 0);
+            OverlayUtil.renderPolygon(graphics, poly, phase.getColor());
+            OverlayUtil.renderTextLocation(graphics, textLoc, "Next", phase.getColor());
         }
 
-        Point zulrahMinimapPoint = Perspective.localToMinimap(client, zulrahLocalTile);
+        /*Point zulrahMinimapPoint = Perspective.localToMinimap(client, zulrahLocalTile);
 
         if (zulrahMinimapPoint == null)
             return;
@@ -233,7 +235,7 @@ public class ZulrahOverlay extends Overlay
             graphics.setColor(NEXT_TEXT_COLOR);
             FontMetrics fm = graphics.getFontMetrics();
             graphics.drawString("Next", zulrahMinimapPoint.getX() - fm.stringWidth("Next") / 2, zulrahMinimapPoint.getY() - 2);
-        }
+        }*/
     }
 
     private Polygon getCanvasTileNorthPoly(Client client, LocalPoint localLocation)

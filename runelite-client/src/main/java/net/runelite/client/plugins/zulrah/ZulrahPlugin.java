@@ -42,10 +42,8 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.zulrah.overlays.ZulrahCurrentPhaseOverlay;
-import net.runelite.client.plugins.zulrah.overlays.ZulrahNextPhaseOverlay;
+import net.runelite.client.plugins.zulrah.overlays.ZulrahInfoOverlay;
 import net.runelite.client.plugins.zulrah.overlays.ZulrahOverlay;
-import net.runelite.client.plugins.zulrah.overlays.ZulrahPrayerOverlay;
 import net.runelite.client.plugins.zulrah.patterns.ZulrahPattern;
 import net.runelite.client.plugins.zulrah.patterns.ZulrahPatternA;
 import net.runelite.client.plugins.zulrah.patterns.ZulrahPatternB;
@@ -78,13 +76,7 @@ public class ZulrahPlugin extends Plugin
     ZulrahOverlay overlay;
 
     @Inject
-    ZulrahCurrentPhaseOverlay currentPhaseOverlay;
-
-    @Inject
-    ZulrahNextPhaseOverlay nextPhaseOverlay;
-
-    @Inject
-    ZulrahPrayerOverlay zulrahPrayerOverlay;
+    ZulrahInfoOverlay infoOverlay;
 
     private final ZulrahPattern[] patterns = new ZulrahPattern[]
             {
@@ -110,25 +102,21 @@ public class ZulrahPlugin extends Plugin
 
     public Collection<Overlay> getOverlays()
     {
-        return Arrays.asList(overlay, currentPhaseOverlay, nextPhaseOverlay, zulrahPrayerOverlay);
+        return Arrays.asList(overlay, infoOverlay);
     }
 
     @Override
     protected void startUp() throws Exception
     {
         overlayManager.add(overlay);
-        overlayManager.add(currentPhaseOverlay);
-        overlayManager.add(nextPhaseOverlay);
-        overlayManager.add(zulrahPrayerOverlay);
+        overlayManager.add(infoOverlay);
     }
 
     @Override
     protected void shutDown() throws Exception
     {
         overlayManager.remove(overlay);
-        overlayManager.remove(currentPhaseOverlay);
-        overlayManager.remove(nextPhaseOverlay);
-        overlayManager.remove(zulrahPrayerOverlay);
+        overlayManager.remove(infoOverlay);
     }
 
     @Subscribe

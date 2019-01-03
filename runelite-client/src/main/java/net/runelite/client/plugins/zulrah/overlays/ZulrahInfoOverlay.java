@@ -24,30 +24,34 @@
  */
 package net.runelite.client.plugins.zulrah.overlays;
 
+import net.runelite.api.Client;
+import net.runelite.api.Prayer;
 import net.runelite.client.plugins.zulrah.ZulrahInstance;
 import net.runelite.client.plugins.zulrah.ZulrahPlugin;
 import net.runelite.client.plugins.zulrah.phase.ZulrahPhase;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
-import net.runelite.client.ui.overlay.components.ImageComponent;
 import net.runelite.client.ui.overlay.components.PanelComponent;
+import net.runelite.client.ui.overlay.components.ImageComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
+import net.runelite.client.ui.overlay.components.TextComponent;
 
 import javax.inject.Inject;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class ZulrahCurrentPhaseOverlay extends Overlay
+public class ZulrahInfoOverlay extends Overlay
 {
+    private final Client client;
     private final ZulrahPlugin plugin;
     private final PanelComponent imagePanelComponent = new PanelComponent();
 
+
     @Inject
-    ZulrahCurrentPhaseOverlay(ZulrahPlugin plugin)
+    ZulrahInfoOverlay(Client client, ZulrahPlugin plugin)
     {
+        this.client = client;
         this.plugin = plugin;
         setPosition(OverlayPosition.BOTTOM_RIGHT);
         setPriority(OverlayPriority.HIGH);
@@ -59,21 +63,30 @@ public class ZulrahCurrentPhaseOverlay extends Overlay
         ZulrahInstance instance = plugin.getInstance();
 
         if (instance == null)
-        {
             return null;
-        }
+
+        imagePanelComponent.getChildren().clear();
 
         ZulrahPhase currentPhase = instance.getPhase();
-        if (currentPhase == null)
-        {
-            return null;
-        }
 
-        BufferedImage zulrahImage = ZulrahImageManager.getZulrahBufferedImage(currentPhase.getType());
-        imagePanelComponent.getChildren().clear();
-        imagePanelComponent.getChildren().add(TitleComponent.builder().text(currentPhase.isJad() ? "JAD PHASE" : instance.getPattern() != null ? instance.getPattern().toString() : "Unknown").build());
-        imagePanelComponent.getChildren().add(new ImageComponent(zulrahImage));
+        if (currentPhase == null)
+            return null;
+
+        Prayer prayer = currentPhase.isJad() ? null : currentPhase.getPrayer();
+
+        if (prayer == null || client.isPrayerActive(prayer))
+            return null;
+
+        if (currentPhase.isJad())
+            imagePanelComponent.getChildren().add(TitleComponent.builder().text("JAD PHASE").build());
+
+        imagePanelComponent.getChildren().add(TitleComponent.builder().text("Switch!").build());
+
+        BufferedImage prayerImage = ZulrahImageManager.getProtectionPrayerBufferedImage(prayer);
+        imagePanelComponent.getChildren().add(new ImageComponent(prayerImage));
 
         return imagePanelComponent.render(graphics);
     }
+
+
 }
