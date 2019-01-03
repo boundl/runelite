@@ -66,7 +66,8 @@ public class ZulrahInstance
 
     ZulrahInstance(NPC zulrah)
     {
-        this.startLocation = zulrah.getWorldLocation();
+        WorldPoint point = zulrah.getWorldLocation();
+        this.startLocation = new WorldPoint(point.getX() + 2, point.getY() + 2, point.getPlane());
     }
 
     public WorldPoint getStartLocation()

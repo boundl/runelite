@@ -81,7 +81,6 @@ public class ZulrahOverlay extends Overlay
         }
 
         WorldPoint startTile = instance.getStartLocation();
-        startTile = new WorldPoint(startTile.getX() + 2, startTile.getY() + 2, startTile.getPlane());
 
         if (nextPhase != null && currentPhase.getStandLocation() == nextPhase.getStandLocation())
         {
@@ -101,6 +100,9 @@ public class ZulrahOverlay extends Overlay
     private void drawStandTiles(Graphics2D graphics, WorldPoint startTile, ZulrahPhase currentPhase, ZulrahPhase nextPhase)
     {
         LocalPoint localTile = LocalPoint.fromWorld(client, currentPhase.getStandTile(startTile));
+
+        if (localTile == null)
+            return;
 
         Polygon northPoly = getCanvasTileNorthPoly(client, localTile);
         Polygon southPoly = getCanvasTileSouthPoly(client, localTile);
@@ -125,10 +127,11 @@ public class ZulrahOverlay extends Overlay
 
         if (nextPhase.isJad())
         {
-            Image jadPrayerImg = ZulrahImageManager.getProtectionPrayerBufferedImage(nextPhase.getPrayer());
+            BufferedImage jadPrayerImg = ZulrahImageManager.getProtectionPrayerBufferedImage(nextPhase.getPrayer());
+
             if (jadPrayerImg != null)
             {
-                Point imageLoc = Perspective.getCanvasImageLocation(client, localTile, (BufferedImage) jadPrayerImg, 0);
+                Point imageLoc = Perspective.getCanvasImageLocation(client, localTile, jadPrayerImg, 0);
                 if (imageLoc != null)
                 {
                     graphics.drawImage(jadPrayerImg, imageLoc.getX(), imageLoc.getY(), null);
@@ -145,6 +148,9 @@ public class ZulrahOverlay extends Overlay
         }
 
         LocalPoint localTile = LocalPoint.fromWorld(client, phase.getStandTile(startTile));
+
+        if (localTile == null)
+            return;
 
         Polygon poly = Perspective.getCanvasTilePoly(client, localTile);
 
@@ -177,10 +183,11 @@ public class ZulrahOverlay extends Overlay
             }
             if (phase.isJad())
             {
-                Image jadPrayerImg = ZulrahImageManager.getProtectionPrayerBufferedImage(phase.getPrayer());
+                BufferedImage jadPrayerImg = ZulrahImageManager.getProtectionPrayerBufferedImage(phase.getPrayer());
+
                 if (jadPrayerImg != null)
                 {
-                    Point imageLoc = Perspective.getCanvasImageLocation(client, localTile, (BufferedImage) jadPrayerImg, 0);
+                    Point imageLoc = Perspective.getCanvasImageLocation(client, localTile, jadPrayerImg, 0);
                     if (imageLoc != null)
                     {
                         graphics.drawImage(jadPrayerImg, imageLoc.getX(), imageLoc.getY(), null);
@@ -197,7 +204,14 @@ public class ZulrahOverlay extends Overlay
             return;
         }
         LocalPoint zulrahLocalTile = LocalPoint.fromWorld(client, phase.getZulrahTile(startTile));
+
+        if (zulrahLocalTile == null)
+            return;
+
         Point zulrahMinimapPoint = Perspective.localToMinimap(client, zulrahLocalTile);
+
+        if (zulrahMinimapPoint == null)
+            return;
 
         graphics.setColor(phase.getColor());
         graphics.fillOval(zulrahMinimapPoint.getX(), zulrahMinimapPoint.getY(), 5, 5);
