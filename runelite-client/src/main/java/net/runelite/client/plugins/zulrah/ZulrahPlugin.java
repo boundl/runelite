@@ -145,6 +145,7 @@ public class ZulrahPlugin extends Plugin
             }
             return;
         }
+        
 
         if (instance == null)
         {
