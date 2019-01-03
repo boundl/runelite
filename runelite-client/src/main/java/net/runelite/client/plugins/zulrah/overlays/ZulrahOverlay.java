@@ -21,7 +21,7 @@ import net.runelite.client.ui.overlay.OverlayUtil;
 public class ZulrahOverlay extends Overlay
 {
     private static final Color TILE_BORDER_COLOR = new Color(0, 0, 0, 150);
-    private static final Color NEXT_TEXT_COLOR = new Color(255, 255, 255, 150);
+    private static final Color NEXT_TEXT_COLOR = new Color(255, 255, 255, 200);
 
     private final Client client;
     private final ZulrahPlugin plugin;
