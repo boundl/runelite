@@ -91,6 +91,7 @@ public class ZulrahPhase
                 return new WorldPoint(startTile.getX() + 10, startTile.getY() - 2, 0);
             case WEST:
                 return new WorldPoint(startTile.getX() - 10, startTile.getY() - 2, 0);
+
         }
         return startTile;
     }
