@@ -77,7 +77,7 @@ public class ZulrahCurrentPhaseOverlay extends Overlay
         imagePanelComponent.getChildren().clear();
         imagePanelComponent.getChildren().add(TitleComponent.builder().text(title).build());
         imagePanelComponent.getChildren().add(new ImageComponent(zulrahImage));
-        imagePanelComponent.setBackgroundColor(backgroundColor);
+        //imagePanelComponent.setBackgroundColor(backgroundColor);
 
         return imagePanelComponent.render(graphics);
     }

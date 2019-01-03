@@ -74,7 +74,7 @@ public class ZulrahNextPhaseOverlay extends Overlay
 
         imagePanelComponent.getChildren().clear();
         imagePanelComponent.getChildren().add(TitleComponent.builder().text("Next").build());
-        imagePanelComponent.setBackgroundColor(backgroundColor);
+        //imagePanelComponent.setBackgroundColor(backgroundColor);
         imagePanelComponent.getChildren().add(new ImageComponent(zulrahImage));
 
         return imagePanelComponent.render(graphics);
