@@ -695,6 +695,32 @@ public class WidgetID
 
 	static class AncientSpellBook
 	{
+		static final int ANCIENT_SPELLBOOK_CONTAINER = 3;
+		static final int BOUNTY_TARGET_TELEPORT = 68;
+		static final int ICE_RUSH = 74;
+		static final int ICE_BLITZ = 75;
+		static final int ICE_BURST = 76;
+		static final int ICE_BARRAGE = 77;
+		static final int BLOOD_RUSH = 78;
+		static final int BLOOD_BLITZ = 79;
+		static final int BLOOD_BURST = 80;
+		static final int BLOOD_BARRAGE = 81;
+		static final int SMOKE_RUSH = 82;
+		static final int SMOKE_BLITZ = 83;
+		static final int SMOKE_BURST = 84;
+		static final int SMOKE_BARRAGE = 85;
+		static final int SHADOW_RUSH = 86;
+		static final int SHADOW_BLITZ = 87;
+		static final int SHADOW_BURST = 88;
+		static final int SHADOW_BARRAGE = 89;
+		static final int PADDEWWA_TELEPORT = 90;
+		static final int SENNTISTEN_TELEPORT = 91;
+		static final int KHARYRLL_TELEPORT = 92;
+		static final int LASSAR_TELEPORT = 93;
+		static final int DAREEYAK_TELEPORT = 94;
+		static final int CARRALLANGER_TELEPORT = 95;
+		static final int ANNAKARL_TELEPORT = 96;
+		static final int GHORROCK_TELEPORT = 97;
 		static final int EDGEVILLE_HOME_TELEPORT = 98;
 	}
 
