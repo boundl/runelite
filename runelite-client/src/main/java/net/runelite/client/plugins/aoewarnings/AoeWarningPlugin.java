@@ -1,6 +1,5 @@
 package net.runelite.client.plugins.aoewarnings;
 
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Binder;
 import com.google.inject.Provides;
 import java.time.Instant;
@@ -9,14 +8,17 @@ import java.util.Map;
 import javax.inject.Inject;
 import net.runelite.api.Point;
 import net.runelite.api.Projectile;
+import net.runelite.api.coords.LocalPoint;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.api.events.ProjectileMoved;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.Overlay;
+import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
-	name = "AoE projectile warning plugin"
+	name = "!AoE warnings"
 )
 public class AoeWarningPlugin extends Plugin
 {
@@ -25,6 +27,9 @@ public class AoeWarningPlugin extends Plugin
 
 	@Inject
 	AoeWarningConfig config;
+
+	@Inject
+	private OverlayManager overlayManager;
 
 	private final Map<Projectile, AoeProjectile> projectiles = new HashMap<>();
 
@@ -40,15 +45,26 @@ public class AoeWarningPlugin extends Plugin
 		return configManager.getConfig(AoeWarningConfig.class);
 	}
 
-	@Override
 	public Overlay getOverlay()
 	{
 		return overlay;
 	}
 
-	public Map<Projectile, AoeProjectile> getProjectiles()
+	Map<Projectile, AoeProjectile> getProjectiles()
 	{
 		return projectiles;
+	}
+
+	@Override
+	protected void startUp() throws Exception
+	{
+		overlayManager.add(overlay);
+	}
+
+	@Override
+	protected void shutDown() throws Exception
+	{
+		overlayManager.remove(overlay);
 	}
 
 	/**
@@ -73,7 +89,7 @@ public class AoeWarningPlugin extends Plugin
 		AoeProjectileInfo aoeProjectileInfo = AoeProjectileInfo.getById(projectileId);
 		if (aoeProjectileInfo != null && isConfigEnabledForProjectileId(projectileId))
 		{
-			Point targetPoint = event.getPosition();
+			LocalPoint targetPoint = event.getPosition();
 			AoeProjectile aoeProjectile = new AoeProjectile(Instant.now(), targetPoint, aoeProjectileInfo);
 			projectiles.put(projectile, aoeProjectile);
 		}
