@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.MenuOpened;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetID;
@@ -45,70 +46,54 @@ public class SpellbookFixerPlugin extends Plugin
     protected void shutDown() throws Exception { }
 
     @Subscribe
-    public void onWidgetLoaded(WidgetLoaded event)
-    {
-        if (event.getGroupId() == WidgetID.SPELLBOOK_GROUP_ID)
-        {
-            //log.debug("do something....");
-        }
-    }
-
-    @Subscribe
     public void onGameTick(GameTick event)
     {
         if (client.getGameState() != GameState.LOGGED_IN)
             return;
 
-        modifyIceBarrage();
-        modifyIceBlitz();
-        modifyBloodBlitz();
+        if (config.shouldModifyIceBarrage())
+            modifySpell(WidgetInfo.SPELL_ICE_BARRAGE, config.getBarragePositionX(), config.getBarragePositionY(), config.getBarrageSize());
+
+        if (config.shouldModifyIceBlitz())
+            modifySpell(WidgetInfo.SPELL_ICE_BLITZ, config.getBlitzPositionX(), config.getBlitzPositionY(), config.getBlitzSize());
+
+        if (config.shouldModifyVengeance())
+            modifySpell(WidgetInfo.SPELL_VENGEANCE, config.getVengeancePositionX(), config.getVengeancePositionY(), config.getVengeanceSize());
+
+        if (config.shouldModifyTeleBlock())
+            modifySpell(WidgetInfo.SPELL_TELE_BLOCK, config.getTeleBlockPositionX(), config.getTeleBlockPositionY(), config.getTeleBlockSize());
+
+        if (config.shouldModifyEntangle())
+            modifySpell(WidgetInfo.SPELL_ENTANGLE, config.getEntanglePositionX(), config.getEntanglePositionY(), config.getEntangleSize());
+
+        setSpellHidden(WidgetInfo.SPELL_BLOOD_BLITZ, config.shouldHideOthers());
+        setSpellHidden(WidgetInfo.SPELL_VENGEANCE_OTHER, config.shouldHideOthers());
+        setSpellHidden(WidgetInfo.SPELL_BIND, config.shouldHideOthers());
+        setSpellHidden(WidgetInfo.SPELL_SNARE, config.shouldHideOthers());
     }
 
-    private void modifyIceBarrage()
+    private void modifySpell(WidgetInfo widgetInfo, int posX, int posY, int size)
     {
-        if (!config.shouldModifyIceBarrage())
+        Widget widget = client.getWidget(widgetInfo);
+
+        if (widget == null)
             return;
 
-        Widget widget_ice_barrage = client.getWidget(WidgetInfo.SPELL_ICE_BARRAGE);
-
-        if (widget_ice_barrage == null)
-            return;
-
-        widget_ice_barrage.setOriginalX(config.getBarragePositionX());
-        widget_ice_barrage.setOriginalY(config.getBarragePositionY());
-        widget_ice_barrage.setOriginalWidth(config.getBarrageSize());
-        widget_ice_barrage.setOriginalHeight(config.getBarrageSize());
-        widget_ice_barrage.revalidate();
+        widget.setOriginalX(posX);
+        widget.setOriginalY(posY);
+        widget.setOriginalWidth(size);
+        widget.setOriginalHeight(size);
+        widget.revalidate();
     }
 
-    private void modifyIceBlitz()
+    private void setSpellHidden(WidgetInfo widgetInfo, boolean hidden)
     {
-        if (!config.shouldModifyIceBlitz())
+        Widget widget = client.getWidget(widgetInfo);
+
+        if (widget == null)
             return;
 
-        Widget widget_ice_blitz = client.getWidget(WidgetInfo.SPELL_ICE_BLITZ);
-
-        if (widget_ice_blitz == null)
-            return;
-
-        widget_ice_blitz.setOriginalX(config.getBlitzPositionX());
-        widget_ice_blitz.setOriginalY(config.getBlitzPositionY());
-        widget_ice_blitz.setOriginalWidth(config.getBlitzSize());
-        widget_ice_blitz.setOriginalHeight(config.getBlitzSize());
-        widget_ice_blitz.revalidate();
-    }
-
-    private void modifyBloodBlitz()
-    {
-        if (!config.shouldHideBloodBlitz())
-            return;
-
-        Widget widget_blood_blitz = client.getWidget(WidgetInfo.SPELL_BLOOD_BLITZ);
-
-        if (widget_blood_blitz == null)
-            return;
-
-        widget_blood_blitz.setHidden(true);
+        widget.setHidden(hidden);
     }
 
 }

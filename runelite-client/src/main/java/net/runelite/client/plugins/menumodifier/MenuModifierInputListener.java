@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 
 public class MenuModifierInputListener extends MouseAdapter implements KeyListener
 {
-    private static final int HOTKEY = KeyEvent.VK_ALT;
+    private static final int HOTKEY = KeyEvent.VK_CONTROL;
 
     @Override
     public void keyTyped(KeyEvent e)

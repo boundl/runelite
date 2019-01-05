@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.menumodifier;
 
+import net.runelite.api.events.MenuOpened;
 import net.runelite.client.eventbus.Subscribe;
 import com.google.inject.Provides;
 import lombok.AccessLevel;
@@ -18,7 +19,10 @@ import net.runelite.client.util.MiscUtils;
 import net.runelite.client.util.Text;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 @PluginDescriptor(
         name = "!Menu Modifier Plugin",
@@ -62,10 +66,66 @@ public class MenuModifierPlugin extends Plugin
     private boolean hotKeyPressed;
     
     private boolean inWilderness = false;
-    
+
+    @Subscribe
+    public void onMenuOpened(MenuOpened event)
+    {
+        if (!inWilderness)
+            return;
+
+        if (hotKeyPressed)
+            return;
+
+        List<MenuEntry> menu_entries = new ArrayList<MenuEntry>();
+
+        for (MenuEntry entry : event.getMenuEntries())
+        {
+            String option = Text.removeTags(entry.getOption()).toLowerCase();
+
+            if (option.contains("trade with") && config.hideTradeWith())
+                continue;
+
+            if (option.contains("lookup") && config.hideLookup())
+                continue;
+
+            if (option.contains("report") && config.hideReport())
+                continue;
+
+            if (option.contains("examine") && config.hideExamine())
+                continue;
+
+            int identifier = entry.getIdentifier();
+
+            Player[] players = client.getCachedPlayers();
+            Player player = null;
+
+            if (identifier >= 0 && identifier < players.length)
+                player = players[identifier];
+
+            if (player == null)
+            {
+                menu_entries.add(entry);
+                continue;
+            }
+
+            if ((option.contains("attack") || option.contains("cast")) && (player.isFriend() || player.isClanMember()))
+                continue;
+
+            menu_entries.add(entry);
+        }
+
+        MenuEntry[] updated_menu_entries = new MenuEntry[menu_entries.size()];
+        updated_menu_entries = menu_entries.toArray(updated_menu_entries);
+
+        client.setMenuEntries(updated_menu_entries);
+    }
+
     @Subscribe
     public void onMenuEntryAdded(MenuEntryAdded menuEntryAdded)
     {
+        if (true)
+            return;
+
         if (!inWilderness)
             return;
 
