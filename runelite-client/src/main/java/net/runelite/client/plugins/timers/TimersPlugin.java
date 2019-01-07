@@ -112,8 +112,8 @@ public class TimersPlugin extends Plugin
 	private static final String SUPER_ANTIFIRE_EXPIRED_MESSAGE = "<col=7f007f>Your super antifire potion has expired.</col>";
 	private static final String SUPER_ANTIVENOM_DRINK_MESSAGE = "You drink some of your super antivenom potion";
 
-	public TimerTimer freezeTimer;
-	public int freezeTime = -1; // time frozen, in game ticks
+	private TimerTimer freezeTimer;
+	private int freezeTime = -1; // time frozen, in game ticks
 
 	private int lastRaidVarb;
 	private int lastWildernessVarb;
