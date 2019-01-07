@@ -22,13 +22,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.http.service.kc;
+package net.runelite.client.events;
 
-import lombok.Value;
-
-@Value
-class KillCountKey
+public abstract class ChatInput
 {
-	private String username;
-	private String boss;
+	public abstract void resume();
 }
