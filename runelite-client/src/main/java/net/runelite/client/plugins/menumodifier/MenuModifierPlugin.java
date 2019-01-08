@@ -64,13 +64,16 @@ public class MenuModifierPlugin extends Plugin
     @Getter(AccessLevel.PACKAGE)
     @Setter(AccessLevel.PACKAGE)
     private boolean hotKeyPressed;
-    
-    private boolean inWilderness = false;
 
     @Subscribe
     public void onMenuOpened(MenuOpened event)
     {
-        if (!inWilderness)
+        Player localPlayer = client.getLocalPlayer();
+        
+        if (localPlayer == null)
+            return;
+        
+        if (!(MiscUtils.getWildernessLevelFrom(client, localPlayer.getWorldLocation()) > 0))
             return;
 
         if (hotKeyPressed)
@@ -120,7 +123,7 @@ public class MenuModifierPlugin extends Plugin
         client.setMenuEntries(updated_menu_entries);
     }
 
-    @Subscribe
+    /*@Subscribe
     public void onMenuEntryAdded(MenuEntryAdded menuEntryAdded)
     {
         if (true)
@@ -160,16 +163,5 @@ public class MenuModifierPlugin extends Plugin
             if (menuEntries.length > 0)
                 client.setMenuEntries(Arrays.copyOf(menuEntries, menuEntries.length - 1));
         }
-    }
-    
-    @Subscribe
-    public void onGameTick(GameTick event)
-    {
-        Player localPlayer = client.getLocalPlayer();
-        
-        if (localPlayer == null)
-            return;
-        
-        inWilderness = MiscUtils.getWildernessLevelFrom(client, localPlayer.getWorldLocation()) > 0;
-    }
+    }*/
 }
