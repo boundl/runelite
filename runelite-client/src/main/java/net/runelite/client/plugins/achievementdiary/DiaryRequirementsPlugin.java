@@ -52,6 +52,7 @@ import net.runelite.client.plugins.achievementdiary.diaries.FaladorDiaryRequirem
 import net.runelite.client.plugins.achievementdiary.diaries.FremennikDiaryRequirement;
 import net.runelite.client.plugins.achievementdiary.diaries.KandarinDiaryRequirement;
 import net.runelite.client.plugins.achievementdiary.diaries.KaramjaDiaryRequirement;
+import net.runelite.client.plugins.achievementdiary.diaries.KourendDiaryRequirement;
 import net.runelite.client.plugins.achievementdiary.diaries.LumbridgeDiaryRequirement;
 import net.runelite.client.plugins.achievementdiary.diaries.MorytaniaDiaryRequirement;
 import net.runelite.client.plugins.achievementdiary.diaries.VarrockDiaryRequirement;
@@ -182,7 +183,7 @@ public class DiaryRequirementsPlugin extends Plugin
 							b.append(word);
 						}
 					}
-					newRequirements.add(i + offset, b.toString());
+					newRequirements.set(i + offset, b.toString());
 				}
 			}
 		}
@@ -239,6 +240,9 @@ public class DiaryRequirementsPlugin extends Plugin
 				break;
 			case "KARAMJA_AREA_TASKS":
 				diaryRequirementContainer = new KaramjaDiaryRequirement();
+				break;
+			case "KOUREND_&_KEBOS_TASKS":
+				diaryRequirementContainer = new KourendDiaryRequirement();
 				break;
 			case "LUMBRIDGE_&_DRAYNOR_TASKS":
 				diaryRequirementContainer = new LumbridgeDiaryRequirement();
@@ -319,6 +323,12 @@ public class DiaryRequirementsPlugin extends Plugin
 		if (r instanceof QuestPointRequirement)
 		{
 			return client.getVar(VarPlayer.QUEST_POINTS) >= ((QuestPointRequirement) r).getQp();
+		}
+		if (r instanceof FavourRequirement)
+		{
+			FavourRequirement f = (FavourRequirement) r;
+			int realFavour = client.getVar(f.getHouse().getVarbit());
+			return (realFavour / 10) >= f.getPercent();
 		}
 		log.warn("Unknown requirement {}", r);
 		return false;
