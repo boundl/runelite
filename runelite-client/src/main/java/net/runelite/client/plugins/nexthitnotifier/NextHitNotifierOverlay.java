@@ -24,6 +24,7 @@ public class NextHitNotifierOverlay extends Overlay
     {
         setPosition(OverlayPosition.BOTTOM_RIGHT);
         setPosition(OverlayPosition.DYNAMIC);
+        setPosition(OverlayPosition.DETACHED);
 
         this.client = client;
         this.plugin = plugin;

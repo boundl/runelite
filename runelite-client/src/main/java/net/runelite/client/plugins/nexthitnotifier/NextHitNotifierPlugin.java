@@ -107,7 +107,7 @@ public class NextHitNotifierPlugin extends Plugin
             return;
         }
 
-        lastHit = Math.round(gainedXp / 1.33f);
+        lastHit = (int)Math.rint(gainedXp / 1.33f);
         lastHpXp = currentXp;
         showTime = 3;
     }
