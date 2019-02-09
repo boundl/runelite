@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Devin French <https://github.com/devinfrench>
+ * Copyright (c) 2019, Tomas Slusny <slusnucky@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,43 +22,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.api.queries;
+package net.runelite.client.plugins.party.data;
 
-import net.runelite.api.Client;
-import net.runelite.api.Tile;
-import net.runelite.api.WallObject;
+import java.awt.Color;
+import java.util.UUID;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import net.runelite.client.ui.overlay.components.PanelComponent;
+import net.runelite.client.ui.overlay.worldmap.WorldMapPoint;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
-
-/**
- * Used for getting wall objects in view,deprecated as of existence of Wall object spawn events
- *
- * @see net.runelite.api.events.WallObjectSpawned
- * @see net.runelite.api.events.WallObjectDespawned
- * @see net.runelite.api.events.WallObjectChanged
- */
-@Deprecated
-public class WallObjectQuery extends TileObjectQuery<WallObject, WallObjectQuery>
+@Setter
+@Getter
+@RequiredArgsConstructor
+public class PartyData
 {
-	@Override
-	public WallObject[] result(Client client)
-	{
-		return getWallObjects(client).stream()
-			.filter(Objects::nonNull)
-			.filter(predicate)
-			.distinct()
-			.toArray(WallObject[]::new);
-	}
+	private final UUID memberId;
+	private final String name;
+	private final WorldMapPoint worldMapPoint;
+	private final PanelComponent panel = new PanelComponent();
+	private final Color color;
 
-	private Collection<WallObject> getWallObjects(Client client)
-	{
-		Collection<WallObject> objects = new ArrayList<>();
-		for (Tile tile : getTiles(client))
-		{
-			objects.add(tile.getWallObject());
-		}
-		return objects;
-	}
+	private int hitpoints;
+	private int maxHitpoints;
+	private int prayer;
+	private int maxPrayer;
 }

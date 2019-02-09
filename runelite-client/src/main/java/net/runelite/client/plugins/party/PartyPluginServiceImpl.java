@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Devin French <https://github.com/devinfrench>
+ * Copyright (c) 2019, Adam <Adam@sigterm.info>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,48 +22,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.api.queries;
+package net.runelite.client.plugins.party;
 
-import net.runelite.api.Client;
-import net.runelite.api.GameObject;
-import net.runelite.api.Tile;
+import java.util.UUID;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import net.runelite.client.plugins.party.data.PartyData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
-
-/**
- * Used for getting game objects in view,deprecated as of existence of GameObject spawn events
- *
- * @see net.runelite.api.events.GameObjectSpawned
- * @see net.runelite.api.events.GameObjectDespawned
- * @see net.runelite.api.events.GameObjectChanged
- */
-@Deprecated
-public class GameObjectQuery extends TileObjectQuery<GameObject, GameObjectQuery>
+@Singleton
+public class PartyPluginServiceImpl implements PartyPluginService
 {
-	@Override
-	public GameObject[] result(Client client)
+	private final PartyPlugin plugin;
+
+	@Inject
+	private PartyPluginServiceImpl(final PartyPlugin plugin)
 	{
-		return getGameObjects(client).stream()
-			.filter(Objects::nonNull)
-			.filter(predicate)
-			.distinct()
-			.toArray(GameObject[]::new);
+
+		this.plugin = plugin;
 	}
 
-	private Collection<GameObject> getGameObjects(Client client)
+	@Override
+	public PartyData getPartyData(UUID memberId)
 	{
-		Collection<GameObject> objects = new ArrayList<>();
-		for (Tile tile : getTiles(client))
-		{
-			GameObject[] gameObjects = tile.getGameObjects();
-			if (gameObjects != null)
-			{
-				objects.addAll(Arrays.asList(gameObjects));
-			}
-		}
-		return objects;
+		return plugin.getPartyData(memberId);
 	}
 }

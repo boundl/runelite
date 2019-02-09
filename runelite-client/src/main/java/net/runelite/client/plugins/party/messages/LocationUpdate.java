@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Adam <Adam@sigterm.info>
+ * Copyright (c) 2019, Tomas Slusny <slusnucky@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,22 +22,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.http.api.ws.messages;
+package net.runelite.client.plugins.party.messages;
 
-import java.time.Instant;
-import net.runelite.http.api.ws.WebsocketMessage;
+import lombok.Value;
+import net.runelite.api.coords.WorldPoint;
+import net.runelite.http.api.ws.messages.party.PartyMemberMessage;
 
-public class Ping extends WebsocketMessage
+@Value
+public class LocationUpdate extends PartyMemberMessage
 {
-	private Instant time;
-
-	public Instant getTime()
-	{
-		return time;
-	}
-
-	public void setTime(Instant time)
-	{
-		this.time = time;
-	}
+	private final WorldPoint worldPoint;
 }

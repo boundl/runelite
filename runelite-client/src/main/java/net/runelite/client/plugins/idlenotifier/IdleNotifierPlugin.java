@@ -143,6 +143,7 @@ public class IdleNotifierPlugin extends Plugin
 			case GEM_CUTTING_EMERALD:
 			case GEM_CUTTING_RUBY:
 			case GEM_CUTTING_DIAMOND:
+			case GEM_CUTTING_AMETHYST:
 			case CRAFTING_GLASSBLOWING:
 			case CRAFTING_SPINNING:
 			case CRAFTING_BATTLESTAVES:
@@ -207,6 +208,7 @@ public class IdleNotifierPlugin extends Plugin
 			case FARMING_MIX_ULTRACOMPOST:
 			/* Misc */
 			case PISCARILIUS_CRANE_REPAIR:
+			case HOME_MAKE_TABLET:
 			case SAND_COLLECTION:
 				resetTimers();
 				lastAnimation = animation;
@@ -388,7 +390,7 @@ public class IdleNotifierPlugin extends Plugin
 
 		if (checkFullSpecEnergy())
 		{
-			notifier.notify("[" + local.getName() + "] has restored spec energy!");;
+			notifier.notify("[" + local.getName() + "] has restored spec energy!");
 		}
 	}
 

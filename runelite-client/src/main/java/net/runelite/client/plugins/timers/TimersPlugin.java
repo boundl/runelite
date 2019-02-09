@@ -272,6 +272,8 @@ public class TimersPlugin extends Plugin
 			removeGameTimer(SANFEW);
 			removeGameTimer(ANTIVENOM);
 			removeGameTimer(ANTIVENOMPLUS);
+			removeGameTimer(ANTIVENOM_ANTIPOISON);
+			removeGameTimer(ANTIVENOMPLUS_ANTIPOSION);
 		}
 
 		if (!config.showAntiFire())
@@ -535,6 +537,7 @@ public class TimersPlugin extends Plugin
 		if (config.showAntiPoison() && event.getMessage().contains(SUPER_ANTIVENOM_DRINK_MESSAGE))
 		{
 			createGameTimer(ANTIVENOMPLUS);
+			createGameTimer(ANTIVENOMPLUS_ANTIPOSION);
 		}
 
 		if (config.showMagicImbue() && event.getMessage().equals(MAGIC_IMBUE_MESSAGE))
@@ -589,6 +592,7 @@ public class TimersPlugin extends Plugin
 		if (config.showAntiPoison() && event.getMessage().contains(ANTIVENOM_DRINK_MESSAGE))
 		{
 			createGameTimer(ANTIVENOM);
+			createGameTimer(ANTIVENOM_ANTIPOISON);
 		}
 
 		if (config.showAntiPoison() && event.getMessage().contains(SANFEW_SERUM_DRINK_MESSAGE))

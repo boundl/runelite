@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2018, Adam <Adam@sigterm.info>
+ * Copyright (c) 2017, Adam <Adam@sigterm.info>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,56 +22,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.api.queries;
+package net.runelite.rs.api;
 
-import java.util.Arrays;
-import java.util.Objects;
-import lombok.RequiredArgsConstructor;
-import net.runelite.api.Client;
-import net.runelite.api.InventoryID;
-import net.runelite.api.Item;
-import net.runelite.api.ItemContainer;
-import net.runelite.api.Query;
+import net.runelite.api.MapElementConfig;
+import net.runelite.mapping.Import;
 
-/**
- * Used for getting inventory items,deprecated as of existence of item container changed events
- *
- * @see net.runelite.api.events.ItemContainerChanged
- */
-@Deprecated
-@RequiredArgsConstructor
-public class InventoryItemQuery extends Query<Item, InventoryItemQuery>
+public interface RSMapElementConfig extends RSCacheableNode, MapElementConfig
 {
-	private final InventoryID inventory;
-
+	@Import("getMapIcon")
 	@Override
-	public Item[] result(Client client)
-	{
-		ItemContainer container = client.getItemContainer(inventory);
-		if (container == null)
-		{
-			return null;
-		}
-		return Arrays.stream(container.getItems())
-				.filter(Objects::nonNull)
-				.filter(predicate)
-				.toArray(Item[]::new);
-	}
-
-	public InventoryItemQuery idEquals(int... ids)
-	{
-		predicate = and(item ->
-		{
-			for (int id : ids)
-			{
-				if (item.getId() == id)
-				{
-					return true;
-				}
-			}
-			return false;
-		});
-		return this;
-	}
-
+	RSSpritePixels getMapIcon(boolean var1);
 }
