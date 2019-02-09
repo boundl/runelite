@@ -160,6 +160,16 @@ public interface AoeWarningConfig extends Config
 	{
 		return true;
 	}
+	
+	@ConfigItem(
+		keyName = "gorilla",
+		name = "Gorilla rock fall",
+		description = "Configures whether or not AOE Projectile Warnings for the Gorilla rock fall are displayed"
+	)
+	default boolean isGorillaEnabled()
+	{
+		return true;
+	}
 
 	@ConfigItem(
 		keyName = "outline",
