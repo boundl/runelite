@@ -10,7 +10,7 @@ import net.runelite.api.GameState;
 import net.runelite.api.NPC;
 import net.runelite.api.Query;
 import net.runelite.api.events.GameTick;
-import net.runelite.api.queries.NPCQuery;
+//import net.runelite.api.queries.NPCQuery;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -28,7 +28,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.QueryRunner;
 
 @PluginDescriptor(
-        name = "!Zulrah plugin"
+        name = "Zulrah plugin"
 )
 public class ZulrahPlugin extends Plugin
 {
@@ -97,7 +97,7 @@ public class ZulrahPlugin extends Plugin
         if (!config.enabled() || client.getGameState() != GameState.LOGGED_IN)
             return;
 
-        NPC zulrah = findZulrah();
+        NPC zulrah = null;//findZulrah();
         if (zulrah == null)
         {
             if (instance != null)
@@ -148,12 +148,12 @@ public class ZulrahPlugin extends Plugin
         }
     }
 
-    private NPC findZulrah()
+    /*private NPC findZulrah()
     {
         Query query = new NPCQuery().nameEquals("Zulrah");
         NPC[] result = queryRunner.runQuery(query);
         return result.length == 1 ? result[0] : null;
-    }
+    }*/
 
     public ZulrahInstance getInstance()
     {

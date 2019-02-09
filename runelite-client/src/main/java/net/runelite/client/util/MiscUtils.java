@@ -20,7 +20,7 @@ public class MiscUtils
     //test replacement so private for now
     private static boolean inWildy(WorldPoint point)
     {
-        if (point == null)
+    	if (point == null)
             return false;
     
         return abovePoly.contains(point.getX(), point.getY()) || belowPoly.contains(point.getX(), point.getY());
