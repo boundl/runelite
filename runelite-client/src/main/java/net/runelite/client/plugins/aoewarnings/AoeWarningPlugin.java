@@ -18,7 +18,7 @@ import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
-	name = "!AoE warnings"
+	name = "AoE warnings"
 )
 public class AoeWarningPlugin extends Plugin
 {
