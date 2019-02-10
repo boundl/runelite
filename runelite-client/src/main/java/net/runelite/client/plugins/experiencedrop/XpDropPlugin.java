@@ -141,8 +141,9 @@ public class XpDropPlugin extends Plugin
 			resetTextColor(widget);
 			return;
 		}
-
+		//todo implement next hit plugin here so it shows next to xp drop
 		String text = widget.getText();
+		
 		final IntStream spriteIDs =
 			Arrays.stream(widget.getParent().getDynamicChildren()).mapToInt(Widget::getSpriteId);
 
