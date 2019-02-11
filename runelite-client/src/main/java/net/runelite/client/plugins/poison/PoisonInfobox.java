@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Seth <Sethtroll3@gmail.com>
+ * Copyright (c) 2018 Hydrox6 <ikada@protonmail.ch>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,52 +22,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.api.events;
+package net.runelite.client.plugins.poison;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import net.runelite.api.ChatMessageType;
-import net.runelite.api.MessageNode;
+import java.awt.Color;
+import java.time.temporal.ChronoUnit;
+import java.awt.image.BufferedImage;
+import net.runelite.client.ui.overlay.infobox.Timer;
 
-/**
- * An event where a new chat message is received.
- * <p>
- * See {@link ChatMessageType} for different message types that can be
- * received.
- * <p>
- * Note: This event will not trigger for NPC dialogues.
- */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class ChatMessage
+class PoisonInfobox extends Timer
 {
-	/**
-	 * The underlying MessageNode for the message.
-	 */
-	private MessageNode messageNode;
-	/**
-	 * The type of message received.
-	 */
-	private ChatMessageType type;
-	/**
-	 * The name of the player that sent the message.
-	 */
-	private String name;
-	/**
-	 * The contents of the message.
-	 */
-	private String message;
-	/**
-	 * The sender of the message.
-	 * <p>
-	 * This field is only used for clan messages and refers to the
-	 * current name of the clan chat the client is in.
-	 */
-	private String sender;
-	/**
-	 * Timestamp of the message.
-	 */
-	private int timestamp;
+	private final PoisonPlugin plugin;
+
+	PoisonInfobox(BufferedImage image, PoisonPlugin plugin)
+	{
+		super(PoisonPlugin.POISON_TICK_MILLIS, ChronoUnit.MILLIS, image, plugin);
+		this.plugin = plugin;
+	}
+
+	@Override
+	public String getTooltip()
+	{
+		return plugin.createTooltip();
+	}
+
+	@Override
+	public Color getTextColor()
+	{
+		return Color.RED.brighter();
+	}
 }
+
