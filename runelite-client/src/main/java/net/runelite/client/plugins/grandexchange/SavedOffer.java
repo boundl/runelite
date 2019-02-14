@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, AeonLucid <https://github.com/AeonLucid>
+ * Copyright (c) 2019, Adam <Adam@sigterm.info>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,48 +22,18 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.http.api.osbuddy;
+package net.runelite.client.plugins.grandexchange;
 
-import com.google.gson.JsonParseException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import lombok.extern.slf4j.Slf4j;
-import net.runelite.http.api.RuneLiteAPI;
-import okhttp3.HttpUrl;
-import okhttp3.Request;
-import okhttp3.Response;
+import lombok.Data;
+import net.runelite.api.GrandExchangeOfferState;
 
-@Slf4j
-public class GrandExchangeClient
+@Data
+class SavedOffer
 {
-	public GrandExchangeResult lookupItem(int itemId) throws IOException
-	{
-		final HttpUrl url = RuneLiteAPI.getApiBase().newBuilder()
-			.addPathSegment("osb")
-			.addPathSegment("ge")
-			.addQueryParameter("itemId", Integer.toString(itemId))
-			.build();
-
-		log.debug("Built URI: {}", url);
-
-		final Request request = new Request.Builder()
-			.url(url)
-			.build();
-
-		try (final Response response = RuneLiteAPI.CLIENT.newCall(request).execute())
-		{
-			if (!response.isSuccessful())
-			{
-				throw new IOException("Error looking up item id: " + response.message());
-			}
-
-			final InputStream in = response.body().byteStream();
-			return RuneLiteAPI.GSON.fromJson(new InputStreamReader(in), GrandExchangeResult.class);
-		}
-		catch (JsonParseException ex)
-		{
-			throw new IOException(ex);
-		}
-	}
+	private int itemId;
+	private int quantitySold;
+	private int totalQuantity;
+	private int price;
+	private int spent;
+	private GrandExchangeOfferState state;
 }
