@@ -153,6 +153,7 @@ public final class AnimationID
 	public static final int TZTOK_JAD_MAGIC_ATTACK = 2656;
 	public static final int TZTOK_JAD_RANGE_ATTACK = 2652;
 	public static final int HELLHOUND_DEFENCE = 6566;
+	public static final int BLACKJACK_KO = 838;
 
 	// Farming
 	public static final int FARMING_HARVEST_FRUIT_TREE = 2280;
@@ -189,4 +190,10 @@ public final class AnimationID
 
 	// POH Animations
 	public static final int INCENSE_BURNER = 3687;
+	
+	// Vorkath
+	public static final int VORKATH_ATTACK = 7952;
+	public static final int VORKATH_FIRE_BOMB_ATTACK = 7960;
+	public static final int VORKATH_ACID_ATTACK = 7957;
+	
 }
