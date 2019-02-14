@@ -25,13 +25,16 @@
  */
 package net.runelite.client.plugins.grounditems;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.LoadingCache;
-import com.google.inject.Provides;
+import static java.lang.Boolean.TRUE;
+import static net.runelite.client.plugins.grounditems.config.ItemHighlightMode.OVERLAY;
+import static net.runelite.client.plugins.grounditems.config.MenuHighlightMode.BOTH;
+import static net.runelite.client.plugins.grounditems.config.MenuHighlightMode.NAME;
+import static net.runelite.client.plugins.grounditems.config.MenuHighlightMode.OPTION;
+
 import java.awt.Color;
 import java.awt.Rectangle;
-import static java.lang.Boolean.TRUE;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -41,7 +44,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.LoadingCache;
+import com.google.inject.Provides;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -77,11 +86,7 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import static net.runelite.client.plugins.grounditems.config.ItemHighlightMode.OVERLAY;
 import net.runelite.client.plugins.grounditems.config.MenuHighlightMode;
-import static net.runelite.client.plugins.grounditems.config.MenuHighlightMode.BOTH;
-import static net.runelite.client.plugins.grounditems.config.MenuHighlightMode.NAME;
-import static net.runelite.client.plugins.grounditems.config.MenuHighlightMode.OPTION;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.StackFormatter;
@@ -506,6 +511,10 @@ public class GroundItemsPlugin extends Plugin
 			if (config.showMenuItemQuantities() && itemComposition.isStackable() && quantity > 1)
 			{
 				lastEntry.setTarget(lastEntry.getTarget() + " (" + quantity + ")");
+			}
+			
+			if (hidden != null && config.removeHidden()) {
+				menuEntries = Arrays.copyOf(menuEntries, menuEntries.length - 1);
 			}
 
 			client.setMenuEntries(menuEntries);
