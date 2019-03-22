@@ -235,7 +235,7 @@ public class ZoneIndicatorsPlugin extends Plugin
                 {
                     lines = Geometry.clipPath(lines, MapLocations.getRoughWilderness(i));
                 }
-                lines = Geometry.unitifyPath(lines, 1);
+                lines = Geometry.splitIntoSegments(lines, 1);
                 if (config.collisionDetection())
                 {
                     lines = Geometry.filterPath(lines, this::collisionFilter);
@@ -262,7 +262,7 @@ public class ZoneIndicatorsPlugin extends Plugin
             if (safeZonePath != null)
             {
                 safeZonePath = Geometry.clipPath(safeZonePath, sceneRect);
-                safeZonePath = Geometry.unitifyPath(safeZonePath, 1);
+                safeZonePath = Geometry.splitIntoSegments(safeZonePath, 1);
                 if (config.collisionDetection())
                 {
                     safeZonePath = Geometry.filterPath(safeZonePath, this::collisionFilter);
