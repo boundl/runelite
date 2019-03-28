@@ -28,20 +28,14 @@ import net.runelite.client.eventbus.Subscribe;
 import com.google.inject.Provides;
 import java.awt.Rectangle;
 import java.awt.geom.GeneralPath;
-import java.util.Arrays;
 import javax.inject.Inject;
 import lombok.Getter;
 import net.runelite.api.Client;
 import net.runelite.api.Constants;
 import net.runelite.api.GameState;
-import net.runelite.api.ObjectComposition;
 import net.runelite.api.Perspective;
-import net.runelite.api.Tile;
-import net.runelite.api.WallObject;
 import net.runelite.api.WorldType;
 import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldArea;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ConfigChanged;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.geometry.Geometry;
@@ -52,7 +46,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
-        name = "!Zone Indicators",
+        name = "Zone Indicators",
         description = "Show borders of multicombat and PvP safezones",
         tags = {"multicombat", "lines", "pvp", "deadman", "safezones", "bogla"}
 )
@@ -131,77 +125,6 @@ public class ZoneIndicatorsPlugin extends Plugin
         coords[1] = lp.getY() - Perspective.LOCAL_TILE_SIZE / 2;
     }
 
-    private boolean isOpenableAt(WorldPoint wp)
-    {
-        int sceneX = wp.getX() - client.getBaseX();
-        int sceneY = wp.getY() - client.getBaseY();
-
-        Tile tile = client.getScene().getTiles()[wp.getPlane()][sceneX][sceneY];
-        if (tile == null)
-        {
-            return false;
-        }
-
-        WallObject wallObject = tile.getWallObject();
-        if (wallObject == null)
-        {
-            return false;
-        }
-
-        ObjectComposition objectComposition = client.getObjectDefinition(wallObject.getId());
-        if (objectComposition == null)
-        {
-            return false;
-        }
-
-        String[] actions = objectComposition.getActions();
-        if (actions == null)
-        {
-            return false;
-        }
-
-        return Arrays.stream(actions).anyMatch(x -> x != null && x.toLowerCase().equals("open"));
-    }
-
-    private boolean collisionFilter(float[] p1, float[] p2)
-    {
-        int x1 = (int)p1[0];
-        int y1 = (int)p1[1];
-        int x2 = (int)p2[0];
-        int y2 = (int)p2[1];
-
-        if (x1 > x2)
-        {
-            int temp = x1;
-            x1 = x2;
-            x2 = temp;
-        }
-        if (y1 > y2)
-        {
-            int temp = y1;
-            y1 = y2;
-            y2 = temp;
-        }
-        int dx = x2 - x1;
-        int dy = y2 - y1;
-        WorldArea wa1 = new WorldArea(new WorldPoint(
-                x1, y1, currentPlane), 1, 1);
-        WorldArea wa2 = new WorldArea(new WorldPoint(
-                x1 - dy, y1 - dx, currentPlane), 1, 1);
-
-        if (isOpenableAt(wa1.toWorldPoint()) || isOpenableAt(wa2.toWorldPoint()))
-        {
-            // When there's something with the open option (e.g. a door) on the tile,
-            // we assume it can be opened and walked through afterwards. Without this
-            // check, the line for that tile wouldn't render with collision detection
-            // because the collision check isn't done if collision data changes.
-            return true;
-        }
-
-        boolean b1 = wa1.canTravelInDirection(client, -dy, -dx);
-        boolean b2 = wa2.canTravelInDirection(client, dy, dx);
-        return b1 && b2;
-    }
 
     private void findLinesInScene()
     {
@@ -236,10 +159,6 @@ public class ZoneIndicatorsPlugin extends Plugin
                     lines = Geometry.clipPath(lines, MapLocations.getRoughWilderness(i));
                 }
                 lines = Geometry.splitIntoSegments(lines, 1);
-                if (config.collisionDetection())
-                {
-                    lines = Geometry.filterPath(lines, this::collisionFilter);
-                }
                 lines = Geometry.transformPath(lines, this::transformWorldToLocal);
                 multicombatPathToDisplay[i] = lines;
             }
@@ -263,10 +182,6 @@ public class ZoneIndicatorsPlugin extends Plugin
             {
                 safeZonePath = Geometry.clipPath(safeZonePath, sceneRect);
                 safeZonePath = Geometry.splitIntoSegments(safeZonePath, 1);
-                if (config.collisionDetection())
-                {
-                    safeZonePath = Geometry.filterPath(safeZonePath, this::collisionFilter);
-                }
                 safeZonePath = Geometry.transformPath(safeZonePath, this::transformWorldToLocal);
             }
             pvpPathToDisplay[i] = safeZonePath;

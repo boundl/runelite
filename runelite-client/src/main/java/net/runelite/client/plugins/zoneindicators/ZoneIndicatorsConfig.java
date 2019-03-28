@@ -66,21 +66,10 @@ public interface ZoneIndicatorsConfig extends Config
     }
 
     @ConfigItem(
-            keyName = "collisionDetection",
-            name = "Collision detection",
-            description = "Only show lines where they can be walked through",
-            position = 4
-    )
-    default boolean collisionDetection()
-    {
-        return true;
-    }
-
-    @ConfigItem(
             keyName = "showMinimapLines",
             name = "Show on minimap",
             description = "Show multicombat and safe zones on the minimap",
-            position = 5
+            position = 4
     )
     default boolean showMinimapLines()
     {
@@ -91,7 +80,7 @@ public interface ZoneIndicatorsConfig extends Config
             keyName = "multicombatColor",
             name = "Multicombat zone color",
             description = "Choose color to use for marking multicombat zones",
-            position = 6
+            position = 5
     )
     default Color multicombatColor()
     {
@@ -102,7 +91,7 @@ public interface ZoneIndicatorsConfig extends Config
             keyName = "safeZoneColor",
             name = "Safe zone color",
             description = "Choose color to use for marking safe zones in PvP/Deadman",
-            position = 7
+            position = 6
     )
     default Color safeZoneColor()
     {
